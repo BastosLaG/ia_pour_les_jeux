@@ -1,0 +1,10 @@
+ ================
+  NB_GAMES_PER_SIDE 10
+  NBL 6
+  NBC 4
+
+  number of wins
+ ================
+    ./player_A is  10
+    ./player_B is  10
+ ================
