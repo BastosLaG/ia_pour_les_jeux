@@ -18,7 +18,7 @@ struct bt_piece_t {
 struct bt_move_t {
   int line_i; int col_i;
   int line_f; int col_f;
-  double h;
+
   // all moves are printed without ambiguity
   // white in its color
   // black in red color
@@ -80,7 +80,6 @@ struct bt_t {
   bool black_can_move_left(int _line, int _col);
 
   bt_move_t get_rand_move();
-  bt_move_t get_heuristique_move();
   bool can_play(bt_move_t _m);
   void play(bt_move_t _m);
   int endgame();
@@ -88,7 +87,7 @@ struct bt_t {
   void playout(bool _log);
       
   // déclarées mais non définies
-  double eval(bt_move_t _m);
+  double eval();
   bt_move_t minimax(double _sec);
   bt_move_t alphabeta(double _sec);
   bt_move_t mcts(double _sec);
@@ -99,7 +98,6 @@ struct bt_t {
   void add_move(int _li, int _ci, int _lf, int _cf) {
     moves[nb_moves].line_i = _li; moves[nb_moves].col_i = _ci;
     moves[nb_moves].line_f = _lf; moves[nb_moves].col_f = _cf;
-    moves[nb_moves].h = eval(moves[nb_moves]);
     nb_moves++;
   }
 };
@@ -250,55 +248,6 @@ bt_move_t bt_t::get_rand_move() {
   int r = ((int)rand())%nb_moves;
   return moves[r];
 }
-
-bt_move_t bt_t::get_heuristique_move(){
-  update_moves();
-  int r = 0;
-  double h_max = -1000.0;
-  for (int i = 0 ; i < nb_moves; i++){
-      if (h_max < eval(moves[i])) {
-        r = i; 
-        h_max = eval(moves[i]);
-      }
-  }
-  std::cout << "H_MAX : " << h_max << " R = " << r << std::endl;
-  return moves[r];
-}
-
-double bt_t::eval(bt_move_t _m) {
-  // À implémenter selon vos critères d'évaluation
-  double evaluation = 0.0;
-
-  if (turn == WHITE) {
-    // Win
-    if(_m.line_f == nbl-1) evaluation += 500;  
-
-    // Attack
-    if(board[_m.line_f][_m.col_f] == BLACK) evaluation += 20;
-
-    // Case vide 
-    if(board[_m.line_f+1][_m.col_f+1] == EMPTY) evaluation += 10;
-    if(board[_m.line_f+1][_m.col_f-1] == EMPTY) evaluation += 10;
-
-    // Safety
-    if(board[_m.line_f-1][_m.col_f+1] == WHITE) += 20;
-    if(board[_m.line_f-1][_m.col_f-1] == WHITE) += 20;
-
-    std::cout << "White : " << evaluation << std::endl;
-  }
-  else if (turn == BLACK) {
-    if(_m.line_f == 0) evaluation += 500;
-    if(board[_m.line_f][_m.col_f] == WHITE) evaluation += 20;
-    if(board[_m.line_f-1][_m.col_f+1] == EMPTY) evaluation += 10;
-    if(board[_m.line_f-1][_m.col_f-1] == EMPTY) evaluation += 10;
-    if(board[_m.line_f-1][_m.col_f+1] == WHITE) evaluation -= 10;
-    if(board[_m.line_f-1][_m.col_f-1] == WHITE) evaluation -= 10;
-    std::cout << "Black : " << evaluation << std::endl;
-  }
-
-  return evaluation;
-}
-
 bool bt_t::can_play(bt_move_t _m) {
   int dx = abs(_m.col_f - _m.col_i);
   if(dx > 1) return false;
