@@ -8,7 +8,9 @@
 bt_t B;
 int boardwidth = 0;
 int boardheight = 0;
+int _max_depth = 0;
 bool white_turn = true;
+
 
 #ifndef VERBOSE_RAND_PLAYER
 #define VERBOSE_RAND_PLAYER
@@ -28,7 +30,7 @@ void help() {
 }
 
 void name() {
-  printf("= heuristique_player\n\n");
+  printf("= bc_heuristique_player\n\n");
 }
 
 void newgame() {
@@ -48,66 +50,78 @@ void showboard() {
   printf("= \n\n");
 }
 
-double eval(bt_move_t _m) {
-  // À implémenter selon vos critères d'évaluation
+double eval_heuristique(bt_move_t _m, int nbi) {
   double evaluation = 0.0;
+  // int i;
+  _m.print(stdout, B.turn, B.nbl);
+  int turn = B.turn%2;
+  // printf(" turn = %d ", B.turn);
+  // for (i = 0; i <= nbi; i++){
+    if (turn == WHITE) {
+      // Win
+      if(_m.line_f == B.nbl) evaluation += 300 /* *(nbi - i) */;  
+      // Attack
+      if(B.board[_m.line_f][_m.col_f] == BLACK) evaluation += 100;
+      // Case vide 
+      if(B.board[_m.line_f][_m.col_f] == EMPTY) evaluation += 50;
+      // Safety
+      if(B.board[_m.line_f+1][_m.col_f+1] == WHITE) evaluation += 10;
+      if(B.board[_m.line_f+1][_m.col_f-1] == WHITE) evaluation += 10;
+      if(B.board[_m.line_f-1][_m.col_f+1] == WHITE) evaluation += 10;
+      if(B.board[_m.line_f-1][_m.col_f-1] == WHITE) evaluation += 10;
+      ///////////////////////////////////////////////////////////////
+      if(B.board[_m.line_f+1][_m.col_f+1] == BLACK) evaluation -= 10;
+      if(B.board[_m.line_f+1][_m.col_f-1] == BLACK) evaluation -= 10;
+      if(B.board[_m.line_f-1][_m.col_f+1] == BLACK) evaluation -= 10;
+      if(B.board[_m.line_f-1][_m.col_f-1] == BLACK) evaluation -= 10;
 
-  if (B.turn == WHITE) {
-    // Win
-    if(_m.line_f == B.nbl) evaluation += 100;  
-
-    // Attack
-    if(B.board[_m.line_f][_m.col_f] == BLACK) evaluation += 50;
-    // Case vide 
-    if(B.board[_m.line_f][_m.col_f] == EMPTY) evaluation += 30;
-
-    // Safety
-    if(B.board[_m.line_f-1][_m.col_f+1] == WHITE) evaluation += 20;
-    if(B.board[_m.line_f-1][_m.col_f-1] == WHITE) evaluation += 20;
-
-    if(B.board[_m.line_f+1][_m.col_f+1] == BLACK) evaluation -= 10;
-    if(B.board[_m.line_f+1][_m.col_f-1] == BLACK) evaluation -= 10;
-
-    std::cout << "White [ "<< _m.line_i << ", " << _m.col_i << " ] -> [ " << _m.line_f << ", " << _m.col_f << " ] \nFind : " << B.board[_m.line_f][_m.col_f] << " : " << evaluation << std::endl;
-  }
-  else if (B.turn == BLACK) {    
-    // Win
-    if(_m.line_f == 1) evaluation += 100;
-    
-    // Attack
-    if(B.board[_m.line_f][_m.col_f] == WHITE) evaluation += 50;
-    // Case Vide
-    if(B.board[_m.line_f][_m.col_f] == EMPTY) evaluation += 30;
-
-    // safety
-    if(B.board[_m.line_f+1][_m.col_f+1] == BLACK) evaluation += 20;
-    if(B.board[_m.line_f+1][_m.col_f-1] == BLACK) evaluation += 20;
-
-    // 
-    if(B.board[_m.line_f-1][_m.col_f+1] == WHITE) evaluation -= 10;
-    if(B.board[_m.line_f-1][_m.col_f-1] == WHITE) evaluation -= 10;
-    
-    std::cout << "Black[ "<< _m.line_i << ", " << _m.col_i << " ] -> [ " << _m.line_f << ", " << _m.col_f << " ] \nFind : " << B.board[_m.line_f][_m.col_f] << " : " << evaluation << std::endl;
-  }
-  
+      fprintf(stderr, " || White : %c%c -> %c%c || Eval = %0.1f\n", boardheight-(_m.line_i-'0'), 'a'+_m.col_i, boardheight-(_m.line_f-'0'), 'a'+_m.col_f, evaluation);
+    }
+    else if (turn == BLACK) {
+      // Win
+      if(_m.line_f == 0) evaluation += 300;
+      // Attack
+      if(B.board[_m.line_f][_m.col_f] == WHITE) evaluation += 100;
+      // Case Vide
+      if(B.board[_m.line_f][_m.col_f] == EMPTY) evaluation += 50;
+      // safety
+      if(B.board[_m.line_f+1][_m.col_f+1] == BLACK) evaluation += 10;
+      if(B.board[_m.line_f+1][_m.col_f-1] == BLACK) evaluation += 10;
+      if(B.board[_m.line_f-1][_m.col_f+1] == BLACK) evaluation += 10;
+      if(B.board[_m.line_f-1][_m.col_f-1] == BLACK) evaluation += 10;
+      /////////////////////////////////////////////////////////////// 
+      if(B.board[_m.line_f+1][_m.col_f+1] == WHITE) evaluation -= 10;
+      if(B.board[_m.line_f+1][_m.col_f-1] == WHITE) evaluation -= 10;
+      if(B.board[_m.line_f-1][_m.col_f+1] == WHITE) evaluation -= 10;
+      if(B.board[_m.line_f-1][_m.col_f-1] == WHITE) evaluation -= 10;
+      
+      fprintf(stderr, "|| Black : %c%c -> %c%c || Eval = %0.1f\n", boardheight-(_m.line_i-'0'), 'a'+_m.col_i, boardheight-(_m.line_f-'0'), 'a'+_m.col_f, evaluation);
+    }
+  // }
   return evaluation;
 }
 
 bt_move_t get_heuristique_move(){
-  B.update_moves();
+  int i;
   int r = 0;
-  double h_max = -1000.0;
-  for (int i = 0 ; i <= B.nb_moves; i++){
+  int r_temp = 0;
+  B.update_moves();
+  double h_max = eval_heuristique(B.moves[0], 10);
 
-    std::cout << B.turn << " eval " << i << " : " << std::endl; 
-    std::cout << eval(B.moves[i]) << std::endl;
-
-      if (h_max <= eval(B.moves[i])) {
+  fprintf(stderr, "moves [\n");
+  for (i = 0 ; i < B.nb_moves; i++){
+    fprintf(stderr, "\t%c%c -> %c%c, \n", boardheight-(B.moves[i].line_i-'0'), 'a'+B.moves[i].col_i , boardheight-(B.moves[i].line_f-'0'), 'a'+B.moves[i].col_f);
+  }
+  fprintf(stderr, "];\n");
+  
+  for (i = 0; i < B.nb_moves; i++){
+    r_temp = eval_heuristique(B.moves[i], 10);
+      if (h_max < r_temp) {
         r = i; 
-        h_max = eval(B.moves[i]);
+        h_max = r_temp;
       }
   }
-  std::cout << "H_MAX : " << h_max << " R = " << r << std::endl;
+  fprintf(stderr, "Best move [%d] = %0.1f\n", r ,h_max);
   return B.moves[r];
 }
 
@@ -128,8 +142,11 @@ void genmove() {
   }
   white_turn = !white_turn;
   printf("= %s\n\n", m.tostr(B.nbl).c_str());
+  showboard();
 }
 
+
+// Sert pour jouer nous meme 
 void play(char a, char b, char c, char d) {
   bt_move_t m;
   m.line_i = boardheight-(a-'0');
@@ -154,10 +171,10 @@ int main(int _ac, char** _av) {
   bool echo_on = false;
   setbuf(stdout, 0);
   setbuf(stderr, 0);
-  if(verbose) fprintf(stderr, "heuristique_player started\n");
+  if(verbose) fprintf(stderr, "bc_heuristique_player started\n");
   char a,b,c,d; // for play cmd
   for (std::string line; std::getline(std::cin, line);) {
-    if(verbose) fprintf(stderr, "heuristique_player receive %s\n", line.c_str());
+    if(verbose) fprintf(stderr, "bc_heuristique_player receive %s\n", line.c_str());
     if(echo_on) if(verbose) fprintf(stderr, "%s\n", line.c_str());
     if(line.compare("quit") == 0) { printf("= \n\n"); break; }
     else if(line.compare("echo ON") == 0) echo_on = true;
