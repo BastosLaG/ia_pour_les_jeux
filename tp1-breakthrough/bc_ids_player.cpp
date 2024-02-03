@@ -57,9 +57,9 @@ double eval(bt_move_t _m) {
     if(_m.line_f == B.nbl) evaluation += 100;  
 
     // Attack
-    if(B.board[_m.line_f][_m.col_f] == BLACK) evaluation += 10;
+    if(B.board[_m.line_f][_m.col_f] == BLACK) evaluation += 50;
     // Case vide 
-    if(B.board[_m.line_f][_m.col_f] == EMPTY) evaluation += 10;
+    if(B.board[_m.line_f][_m.col_f] == EMPTY) evaluation += 30;
 
     // Safety
     if(B.board[_m.line_f-1][_m.col_f+1] == WHITE) evaluation += 20;
@@ -68,16 +68,16 @@ double eval(bt_move_t _m) {
     if(B.board[_m.line_f+1][_m.col_f+1] == BLACK) evaluation -= 10;
     if(B.board[_m.line_f+1][_m.col_f-1] == BLACK) evaluation -= 10;
 
-    // std::cout << "White : " << evaluation << std::endl;
+    std::cout << "White [ "<< _m.line_i << ", " << _m.col_i << " ] -> [ " << _m.line_f << ", " << _m.col_f << " ] \nFind : " << B.board[_m.line_f][_m.col_f] << " : " << evaluation << std::endl;
   }
   else if (B.turn == BLACK) {    
     // Win
-    if(_m.line_f == B.nbl) evaluation += 100;
+    if(_m.line_f == 1) evaluation += 100;
     
     // Attack
-    if(B.board[_m.line_f][_m.col_f] == WHITE) evaluation += 10;
+    if(B.board[_m.line_f][_m.col_f] == WHITE) evaluation += 50;
     // Case Vide
-    if(B.board[_m.line_f][_m.col_f] == EMPTY) evaluation += 10;
+    if(B.board[_m.line_f][_m.col_f] == EMPTY) evaluation += 30;
 
     // safety
     if(B.board[_m.line_f+1][_m.col_f+1] == BLACK) evaluation += 20;
@@ -87,7 +87,7 @@ double eval(bt_move_t _m) {
     if(B.board[_m.line_f-1][_m.col_f+1] == WHITE) evaluation -= 10;
     if(B.board[_m.line_f-1][_m.col_f-1] == WHITE) evaluation -= 10;
     
-    // std::cout << "Black : " << evaluation << std::endl;
+    std::cout << "Black[ "<< _m.line_i << ", " << _m.col_i << " ] -> [ " << _m.line_f << ", " << _m.col_f << " ] \nFind : " << B.board[_m.line_f][_m.col_f] << " : " << evaluation << std::endl;
   }
   
   return evaluation;
