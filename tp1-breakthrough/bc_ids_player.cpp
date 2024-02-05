@@ -57,9 +57,11 @@ double eval_heuristique(bt_move_t _m, int nbi) {
   int turn = B.turn%2;
   // printf(" turn = %d ", B.turn);
   // for (i = 0; i <= nbi; i++){
+    // printf("   %d ", B.nbl);
+    // printf("   %d\n", _m.line_f);
     if (turn == WHITE) {
       // Win
-      if(_m.line_f == B.nbl) evaluation += 300 /* *(nbi - i) */;  
+      if(_m.line_f == 0) evaluation += 300 /* *(nbi - i) */;  
       // Attack
       if(B.board[_m.line_f][_m.col_f] == BLACK) evaluation += 100;
       // Case vide 
@@ -79,7 +81,7 @@ double eval_heuristique(bt_move_t _m, int nbi) {
     }
     else if (turn == BLACK) {
       // Win
-      if(_m.line_f == 0) evaluation += 300;
+      if(_m.line_f == B.nbl-1) evaluation += 300;
       // Attack
       if(B.board[_m.line_f][_m.col_f] == WHITE) evaluation += 100;
       // Case Vide
