@@ -8,12 +8,13 @@
 bt_t B;
 int boardwidth = 0;
 int boardheight = 0;
-int _max_depth = 0;
+int _max_depth = 10;
+bool _solved = false;
 bool white_turn = true;
+bool debug = false;
 
-
-#ifndef VERBOSE_RAND_PLAYER
-#define VERBOSE_RAND_PLAYER
+#ifndef VERBOSE_PLAYER
+#define VERBOSE_PLAYER
 bool verbose = true;
 bool showboard_at_each_move = false;
 #endif
@@ -50,56 +51,30 @@ void showboard() {
   printf("= \n\n");
 }
 
-double eval_heuristique(bt_move_t _m, int nbi) {
+double eval_heuristique(bt_move_t _m) {
   double evaluation = 0.0;
-  // int i;
-  _m.print(stdout, B.turn, B.nbl);
+  if(debug) _m.print(stdout, B.turn, B.nbl);
   int turn = B.turn%2;
-  // printf(" turn = %d ", B.turn);
-  // for (i = 0; i <= nbi; i++){
-    // printf("   %d ", B.nbl);
-    // printf("   %d\n", _m.line_f);
-    if (turn == WHITE) {
-      // Win
-      if(_m.line_f == 0) evaluation += 300 /* *(nbi - i) */;  
-      // Attack
-      if(B.board[_m.line_f][_m.col_f] == BLACK) evaluation += 100;
-      // Case vide 
-      if(B.board[_m.line_f][_m.col_f] == EMPTY) evaluation += 50;
-      // Safety
-      if(B.board[_m.line_f+1][_m.col_f+1] == WHITE) evaluation += 10;
-      if(B.board[_m.line_f+1][_m.col_f-1] == WHITE) evaluation += 10;
-      if(B.board[_m.line_f-1][_m.col_f+1] == WHITE) evaluation += 10;
-      if(B.board[_m.line_f-1][_m.col_f-1] == WHITE) evaluation += 10;
-      ///////////////////////////////////////////////////////////////
-      if(B.board[_m.line_f+1][_m.col_f+1] == BLACK) evaluation -= 10;
-      if(B.board[_m.line_f+1][_m.col_f-1] == BLACK) evaluation -= 10;
-      if(B.board[_m.line_f-1][_m.col_f+1] == BLACK) evaluation -= 10;
-      if(B.board[_m.line_f-1][_m.col_f-1] == BLACK) evaluation -= 10;
+  // Win
+  if (turn%2 == WHITE) if(_m.line_f == 0) evaluation += 300;
+  if (turn%2 == BLACK) if(_m.line_f == B.nbl-1) evaluation += 300;
+  // Attack
+  if(B.board[_m.line_f][_m.col_f] == (turn+1)%2) evaluation += 100;
+  // Case vide 
+  if(B.board[_m.line_f][_m.col_f] == EMPTY) evaluation += 50;
+  // Safety
+  if(B.board[_m.line_f+1][_m.col_f+1] == turn%2) evaluation += 10;
+  if(B.board[_m.line_f+1][_m.col_f-1] == turn%2) evaluation += 10;
+  if(B.board[_m.line_f-1][_m.col_f+1] == turn%2) evaluation += 10;
+  if(B.board[_m.line_f-1][_m.col_f-1] == turn%2) evaluation += 10;
+  ///////////////////////////////////////////////////////////////
+  if(B.board[_m.line_f+1][_m.col_f+1] == (turn+1)%2) evaluation -= 10;
+  if(B.board[_m.line_f+1][_m.col_f-1] == (turn+1)%2) evaluation -= 10;
+  if(B.board[_m.line_f-1][_m.col_f+1] == (turn+1)%2) evaluation -= 10;
+  if(B.board[_m.line_f-1][_m.col_f-1] == (turn+1)%2) evaluation -= 10; 
 
-      fprintf(stderr, " || White : %c%c -> %c%c || Eval = %0.1f\n", boardheight-(_m.line_i-'0'), 'a'+_m.col_i, boardheight-(_m.line_f-'0'), 'a'+_m.col_f, evaluation);
-    }
-    else if (turn == BLACK) {
-      // Win
-      if(_m.line_f == B.nbl-1) evaluation += 300;
-      // Attack
-      if(B.board[_m.line_f][_m.col_f] == WHITE) evaluation += 100;
-      // Case Vide
-      if(B.board[_m.line_f][_m.col_f] == EMPTY) evaluation += 50;
-      // safety
-      if(B.board[_m.line_f+1][_m.col_f+1] == BLACK) evaluation += 10;
-      if(B.board[_m.line_f+1][_m.col_f-1] == BLACK) evaluation += 10;
-      if(B.board[_m.line_f-1][_m.col_f+1] == BLACK) evaluation += 10;
-      if(B.board[_m.line_f-1][_m.col_f-1] == BLACK) evaluation += 10;
-      /////////////////////////////////////////////////////////////// 
-      if(B.board[_m.line_f+1][_m.col_f+1] == WHITE) evaluation -= 10;
-      if(B.board[_m.line_f+1][_m.col_f-1] == WHITE) evaluation -= 10;
-      if(B.board[_m.line_f-1][_m.col_f+1] == WHITE) evaluation -= 10;
-      if(B.board[_m.line_f-1][_m.col_f-1] == WHITE) evaluation -= 10;
-      
-      fprintf(stderr, "|| Black : %c%c -> %c%c || Eval = %0.1f\n", boardheight-(_m.line_i-'0'), 'a'+_m.col_i, boardheight-(_m.line_f-'0'), 'a'+_m.col_f, evaluation);
-    }
-  // }
+  if(debug) if(turn%2==0) fprintf(stderr, "|| White : %c%c -> %c%c || Eval = %0.1f\n", boardheight-(_m.line_i-'0'), 'a'+_m.col_i, boardheight-(_m.line_f-'0'), 'a'+_m.col_f, evaluation);
+  if(debug) if(turn%2==1) fprintf(stderr, "|| Black : %c%c -> %c%c || Eval = %0.1f\n", boardheight-(_m.line_i-'0'), 'a'+_m.col_i, boardheight-(_m.line_f-'0'), 'a'+_m.col_f, evaluation);
   return evaluation;
 }
 
@@ -108,22 +83,23 @@ bt_move_t get_heuristique_move(){
   int r = 0;
   int r_temp = 0;
   B.update_moves();
-  double h_max = eval_heuristique(B.moves[0], 10);
+  double h_max = eval_heuristique(B.moves[0]);
 
-  fprintf(stderr, "moves [\n");
-  for (i = 0 ; i < B.nb_moves; i++){
-    fprintf(stderr, "\t%c%c -> %c%c, \n", boardheight-(B.moves[i].line_i-'0'), 'a'+B.moves[i].col_i , boardheight-(B.moves[i].line_f-'0'), 'a'+B.moves[i].col_f);
+  if(debug) {
+    fprintf(stderr, "moves [\n");
+    for (i = 0 ; i < B.nb_moves; i++){
+      fprintf(stderr, "\t%c%c -> %c%c, \n", boardheight-(B.moves[i].line_i-'0'), 'a'+B.moves[i].col_i , boardheight-(B.moves[i].line_f-'0'), 'a'+B.moves[i].col_f);
+    }
+    fprintf(stderr, "];\n");  
   }
-  fprintf(stderr, "];\n");
-  
   for (i = 0; i < B.nb_moves; i++){
-    r_temp = eval_heuristique(B.moves[i], 10);
-      if (h_max < r_temp) {
-        r = i; 
-        h_max = r_temp;
-      }
+    r_temp = eval_heuristique(B.moves[i]);
+    if (h_max < r_temp) {
+      r = i; 
+      h_max = r_temp;
+    }
   }
-  fprintf(stderr, "Best move [%d] = %0.1f\n", r ,h_max);
+  if(debug) fprintf(stderr, "Best move [%d] = %0.1f\n", r ,h_max);
   return B.moves[r];
 }
 
@@ -144,7 +120,7 @@ void genmove() {
   }
   white_turn = !white_turn;
   printf("= %s\n\n", m.tostr(B.nbl).c_str());
-  showboard();
+  if(debug) showboard();
 }
 
 

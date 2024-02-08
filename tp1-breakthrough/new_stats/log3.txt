@@ -1,0 +1,100 @@
+nb_turn: 26   timers : [31m24.00[0m : 24.00
+6 . . . . 
+5 [31m@[0m [31m@[0m o [31m@[0m 
+4 [31m@[0m o . . 
+3 o [31m@[0m . o 
+2 . . . . 
+1 o [31m@[0m . . 
+  a b c d 
+(./player_B -11 24.00) (./player_A 11 24.00) => ./player_A win
+================= player2 WIN
+nb_turn: 26   timers : [31m24.00[0m : 24.00
+6 [31m@[0m . . . 
+5 . . . [31m@[0m 
+4 [31m@[0m o o [31m@[0m 
+3 . o [31m@[0m o 
+2 . . . . 
+1 [31m@[0m . . o 
+  a b c d 
+(./player_B -11 24.00) (./player_A 11 24.00) => ./player_A win
+================= player2 WIN
+nb_turn: 25   timers : [31m24.00[0m : 24.00
+6 . . . o 
+5 o [31m@[0m . . 
+4 . [31m@[0m [31m@[0m [31m@[0m 
+3 . . o [31m@[0m 
+2 . o [31m@[0m o 
+1 . . . o 
+  a b c d 
+(./player_B 12 24.00) (./player_A -12 24.00) => ./player_B win
+================= player1 WIN
+nb_turn: 28   timers : [31m24.00[0m : 24.00
+6 . . . . 
+5 . [31m@[0m . . 
+4 [31m@[0m o . [31m@[0m 
+3 o o . [31m@[0m 
+2 . . o . 
+1 . [31m@[0m o . 
+  a b c d 
+(./player_B -10 24.00) (./player_A 10 24.00) => ./player_A win
+================= player2 WIN
+nb_turn: 22   timers : [31m24.00[0m : 24.00
+6 [31m@[0m [31m@[0m . . 
+5 . . . [31m@[0m 
+4 o [31m@[0m o o 
+3 . o . . 
+2 . . . o 
+1 . . [31m@[0m o 
+  a b c d 
+(./player_B -11 24.00) (./player_A 11 24.00) => ./player_A win
+================= player2 WIN
+nb_turn: 19   timers : [31m24.00[0m : 24.00
+6 . o [31m@[0m . 
+5 . . [31m@[0m [31m@[0m 
+4 [31m@[0m . [31m@[0m . 
+3 . o [31m@[0m o 
+2 o . . o 
+1 . . o o 
+  a b c d 
+(./player_B 13 24.00) (./player_A -13 24.00) => ./player_B win
+================= player1 WIN
+nb_turn: 30   timers : [31m24.00[0m : 24.00
+6 . . [31m@[0m . 
+5 [31m@[0m . . o 
+4 . . [31m@[0m . 
+3 [31m@[0m o . o 
+2 [31m@[0m . . . 
+1 o . [31m@[0m . 
+  a b c d 
+(./player_B -10 24.00) (./player_A 10 24.00) => ./player_A win
+================= player2 WIN
+nb_turn: 29   timers : [31m24.00[0m : 24.00
+6 . . o . 
+5 . [31m@[0m . . 
+4 . . o . 
+3 . [31m@[0m o o 
+2 . . [31m@[0m . 
+1 o . . . 
+  a b c d 
+(./player_B 8 24.00) (./player_A -8 24.00) => ./player_B win
+================= player1 WIN
+nb_turn: 30   timers : [31m24.00[0m : 24.00
+6 [31m@[0m . . . 
+5 . . . . 
+4 [31m@[0m . o [31m@[0m 
+3 o . [31m@[0m o 
+2 . . . . 
+1 . [31m@[0m . . 
+  a b c d 
+(./player_B -8 24.00) (./player_A 8 24.00) => ./player_A win
+================= player2 WIN
+nb_turn: 19   timers : [31m24.00[0m : 24.00
+6 . [31m@[0m [31m@[0m o 
+5 . . . [31m@[0m 
+4 o . [31m@[0m . 
+3 o . . [31m@[0m 
+2 . . . o 
+1 o . o o 
+  a b c d 
+(./player_B 12 24.00) (./player_A -12 24.00) => ./player_B win
+================= player1 WIN
