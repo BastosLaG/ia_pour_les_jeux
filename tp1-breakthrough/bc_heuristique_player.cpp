@@ -1,43 +1,23 @@
- #include <cstdio>
+#include <cstdio>
 #include <cstdlib>
 #include <string.h>
 #include <iostream>
 #include <string>
-#include <vector>
-#include <map>
-#include <cmath>
 #include "mybt.h"
 
 bt_t B;
-
 int boardwidth = 0;
 int boardheight = 0;
 int _max_depth = 10;
-int _solution_sized;
-bt_t _best_s;
+bool _solved = false;
 bool white_turn = true;
 bool debug = false;
-
-std::map<bt_t, int> H;
-
-
-#define WIN 300
 
 #ifndef VERBOSE_PLAYER
 #define VERBOSE_PLAYER
 bool verbose = true;
 bool showboard_at_each_move = false;
 #endif
-
-void dls_init();
-void dls(bt_t s, int d);
-void ids(bt_move_t _m);
-double eval_heuristique(bt_move_t _m);
-
-std::vector<bt_move_t> nextMoves(bt_t s);
-bt_t applyMove(bt_t s, bt_move_t move);
-bt_move_t get_heuristique_move();
-
 
 void help() {
   fprintf(stderr, "  quit\n");
@@ -51,7 +31,7 @@ void help() {
 }
 
 void name() {
-  printf("= bc_ids_player\n\n");
+  printf("= bc_heuristique_player\n\n");
 }
 
 void newgame() {
@@ -71,16 +51,13 @@ void showboard() {
   printf("= \n\n");
 }
 
-
 double eval_heuristique(bt_move_t _m) {
   double evaluation = 0.0;
-  int turn = B.turn%2;
-  
   if(debug) _m.print(stdout, B.turn, B.nbl);
-
+  int turn = B.turn%2;
   // Win
-  if (turn%2 == WHITE) if(_m.line_f == 0) evaluation += WIN;
-  if (turn%2 == BLACK) if(_m.line_f == B.nbl-1) evaluation += WIN;
+  if (turn%2 == WHITE) if(_m.line_f == 0) evaluation += 300;
+  if (turn%2 == BLACK) if(_m.line_f == B.nbl-1) evaluation += 300;
   // Attack
   if(B.board[_m.line_f][_m.col_f] == (turn+1)%2) evaluation += 100;
   // Case vide 
@@ -98,105 +75,15 @@ double eval_heuristique(bt_move_t _m) {
 
   if(debug) if(turn%2==0) fprintf(stderr, "|| White : %c%c -> %c%c || Eval = %0.1f\n", boardheight-(_m.line_i-'0'), 'a'+_m.col_i, boardheight-(_m.line_f-'0'), 'a'+_m.col_f, evaluation);
   if(debug) if(turn%2==1) fprintf(stderr, "|| Black : %c%c -> %c%c || Eval = %0.1f\n", boardheight-(_m.line_i-'0'), 'a'+_m.col_i, boardheight-(_m.line_f-'0'), 'a'+_m.col_f, evaluation);
-  
   return evaluation;
 }
-
-
-void dls_init() {
-  _max_depth = 10;
-  H.clear();
-  _solution_sized = 0;
-  _best_s = B;
-  dls(B, 0);
-}
-
-
-// Implement nextMoves function
-std::vector<bt_move_t> nextMoves(bt_t s) {
-    std::vector<bt_move_t> moves;
-    s.update_moves();
-    for (int i = 0; i < s.nb_moves; i++)
-    {
-      moves.push_back(s.moves[i]);
-    }
-    return moves;
-}
-
-// Implement applyMove function
-bt_t applyMove(bt_t s, bt_move_t move) {
-    // Apply move to state s and return the new state
-    bt_t s_prime = s;
-    s_prime.play(move);
-    return s_prime;
-}
-
-void dls(bt_t s, int d) {
-  long unsigned int i;
-  double best_s;
-  std::vector<bt_move_t> M;
-
-  // if _solution_sized != 0 then return; 
-  if (_solution_sized != 0) return;
-  // H[s] <- d
-  H.insert(std::make_pair(s, d));
-  // if s == h(best_s) > h(s) then 
-  // best_s <- s;
-  
-  // if s == WIN then 
-  // // solution_size <- d;
-  // // return;
-  if (best_s == WIN) {
-    _solution_sized = d;
-    return;
-  }
-  // if s == LOST or d == _max_depth then return;
-  if (best_s <= 0 || d >= _max_depth) return;
-
-  //M <- nextMoves(s);
-  M = nextMoves(s);
-  for (i = 0; i < M.size(); i++) {
-    //s' = applyMove(s, M[i]);
-    bt_t s_prime = applyMove(s, M[i]);
-    /*s' !€ H or H[s'] > d then
-      *solution[d] <- m;    
-      *dls(s', d+1);
-    */
-    dls(s_prime, d + 1);
-
-
-    // if solution_size != 0 then break;
-    if (_solution_sized != 0) break;
-  }
-}
-
-
-
-
-
-void ids(bt_move_t _m) {
-
-}
-
-
 
 bt_move_t get_heuristique_move(){
   int i;
   int r = 0;
   int r_temp = 0;
-  // int _max_depth = 10;
-  double h_max = 0;
-  
-  for (i = 0; i < B.nb_moves; i++){
-    r_temp = eval_heuristique(B.moves[i]);
-    if (h_max < r_temp) {
-      r = i; 
-      h_max = r_temp;
-    }
-  }
-  bt_move_t best_move = B.moves[r];
-
-
+  B.update_moves();
+  double h_max = eval_heuristique(B.moves[0]);
 
   if(debug) {
     fprintf(stderr, "moves [\n");
@@ -205,35 +92,16 @@ bt_move_t get_heuristique_move(){
     }
     fprintf(stderr, "];\n");  
   }
-
+  for (i = 0; i < B.nb_moves; i++){
+    r_temp = eval_heuristique(B.moves[i]);
+    if (h_max < r_temp) {
+      r = i; 
+      h_max = r_temp;
+    }
+  }
   if(debug) fprintf(stderr, "Best move [%d] = %0.1f\n", r ,h_max);
-  return best_move;
+  return B.moves[r];
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void genmove() {
   int ret = B.endgame();

@@ -1,23 +1,44 @@
-#include <cstdio>
+ #include <cstdio>
 #include <cstdlib>
 #include <string.h>
 #include <iostream>
 #include <string>
+#include <vector>
+#include <map>
+#include <cmath>
 #include "mybt.h"
 
 bt_t B;
+
 int boardwidth = 0;
 int boardheight = 0;
 int _max_depth = 10;
-bool _solved = false;
+
+int _solution_size;
+bt_t _best_s;
 bool white_turn = true;
 bool debug = false;
+
+std::map<bt_t, int> H;
+std::map<int, bt_move_t> _solution;
+
+
+#define WIN 300
 
 #ifndef VERBOSE_PLAYER
 #define VERBOSE_PLAYER
 bool verbose = true;
 bool showboard_at_each_move = false;
 #endif
+
+
+void dls(bt_t s, int d);
+void ids(bt_t _m);
+std::vector<bt_move_t> nextMoves(bt_t s);
+bt_t applyMove(bt_t s, bt_move_t move);
+bool check_win(bt_t p);
+bool check_loose(bt_t p);
+
 
 void help() {
   fprintf(stderr, "  quit\n");
@@ -31,7 +52,7 @@ void help() {
 }
 
 void name() {
-  printf("= bc_heuristique_player\n\n");
+  printf("= bc_ids_player\n\n");
 }
 
 void newgame() {
@@ -51,57 +72,140 @@ void showboard() {
   printf("= \n\n");
 }
 
-double eval_heuristique(bt_move_t _m) {
-  double evaluation = 0.0;
-  if(debug) _m.print(stdout, B.turn, B.nbl);
-  int turn = B.turn%2;
-  // Win
-  if (turn%2 == WHITE) if(_m.line_f == 0) evaluation += 300;
-  if (turn%2 == BLACK) if(_m.line_f == B.nbl-1) evaluation += 300;
-  // Attack
-  if(B.board[_m.line_f][_m.col_f] == (turn+1)%2) evaluation += 100;
-  // Case vide 
-  if(B.board[_m.line_f][_m.col_f] == EMPTY) evaluation += 50;
-  // Safety
-  if(B.board[_m.line_f+1][_m.col_f+1] == turn%2) evaluation += 10;
-  if(B.board[_m.line_f+1][_m.col_f-1] == turn%2) evaluation += 10;
-  if(B.board[_m.line_f-1][_m.col_f+1] == turn%2) evaluation += 10;
-  if(B.board[_m.line_f-1][_m.col_f-1] == turn%2) evaluation += 10;
-  ///////////////////////////////////////////////////////////////
-  if(B.board[_m.line_f+1][_m.col_f+1] == (turn+1)%2) evaluation -= 10;
-  if(B.board[_m.line_f+1][_m.col_f-1] == (turn+1)%2) evaluation -= 10;
-  if(B.board[_m.line_f-1][_m.col_f+1] == (turn+1)%2) evaluation -= 10;
-  if(B.board[_m.line_f-1][_m.col_f-1] == (turn+1)%2) evaluation -= 10; 
 
-  if(debug) if(turn%2==0) fprintf(stderr, "|| White : %c%c -> %c%c || Eval = %0.1f\n", boardheight-(_m.line_i-'0'), 'a'+_m.col_i, boardheight-(_m.line_f-'0'), 'a'+_m.col_f, evaluation);
-  if(debug) if(turn%2==1) fprintf(stderr, "|| Black : %c%c -> %c%c || Eval = %0.1f\n", boardheight-(_m.line_i-'0'), 'a'+_m.col_i, boardheight-(_m.line_f-'0'), 'a'+_m.col_f, evaluation);
+double eval_heuristique(bt_t p) {
+  int i, j;
+  double evaluation = 0.0;
+  int turn = p.turn%2;
+
+  for (i = 0; i < p.nbl; i++){
+    for (j = 0; j < p.nbc; j++)
+    {
+      if (turn == WHITE) {
+        if (p.board[i][j] == p.board[0][j] && p.board[i][j] == WHITE) 
+          evaluation += WIN;
+        // nbr d'advairsaires et nbr d'alliés
+        if(p.board[i][j] == (turn+1)%2) evaluation -= (5 * p.nbl);
+        if(p.board[i][j] == turn) evaluation += (5 * abs(i - p.nbl));
+      }
+      if (turn == BLACK){
+        if (p.board[i][j] == p.board[p.nbl-1][j] && p.board[i][j] == BLACK) 
+          evaluation += WIN;
+        // nbr d'advairsaires et nbr d'alliés
+        if(p.board[i][j] == (turn+1)%2) evaluation -= (5 * abs(i - p.nbl));
+        if(p.board[i][j] == turn) evaluation += (5 * p.nbl);
+      }
+      // couverture mutuelle et mise en danger d'un pion ? 
+      if(p.board[i+1][j+1] == turn) evaluation += 1;
+      if(p.board[i+1][j-1] == turn) evaluation += 1;
+      if(p.board[i-1][j+1] == turn) evaluation += 1;
+      if(p.board[i-1][j-1] == turn) evaluation += 1;
+      ///////////////////////////////////////////////////////////
+      if(p.board[i+1][j+1] == (turn+1)%2) evaluation -= 1;
+      if(p.board[i+1][j-1] == (turn+1)%2) evaluation -= 1;
+      if(p.board[i-1][j+1] == (turn+1)%2) evaluation -= 1;
+      if(p.board[i-1][j-1] == (turn+1)%2) evaluation -= 1; 
+    } 
+  }
+  
   return evaluation;
 }
 
-bt_move_t get_heuristique_move(){
-  int i;
-  int r = 0;
-  int r_temp = 0;
-  B.update_moves();
-  double h_max = eval_heuristique(B.moves[0]);
 
-  if(debug) {
-    fprintf(stderr, "moves [\n");
-    for (i = 0 ; i < B.nb_moves; i++){
-      fprintf(stderr, "\t%c%c -> %c%c, \n", boardheight-(B.moves[i].line_i-'0'), 'a'+B.moves[i].col_i , boardheight-(B.moves[i].line_f-'0'), 'a'+B.moves[i].col_f);
-    }
-    fprintf(stderr, "];\n");  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+std::vector<bt_move_t> nextMoves(bt_t s) {
+  std::vector<bt_move_t> moves;
+  s.update_moves();
+  for (int i = 0; i < s.nb_moves; i++)
+  {
+    moves.push_back(s.moves[i]);
   }
-  for (i = 0; i < B.nb_moves; i++){
-    r_temp = eval_heuristique(B.moves[i]);
-    if (h_max < r_temp) {
-      r = i; 
-      h_max = r_temp;
-    }
-  }
-  if(debug) fprintf(stderr, "Best move [%d] = %0.1f\n", r ,h_max);
-  return B.moves[r];
+  return moves;
 }
+
+bt_t applyMove(bt_t s, bt_move_t move) {
+  bt_t s_prime = s;
+  s_prime.play(move);
+  return s_prime;
+}
+
+bool check_win(bt_t p){
+  int turn = p.turn%2;
+  if (turn == WHITE) {
+    for (int i = 0; i < p.nbc; i++) {
+      if (p.board[0][i] == WHITE) return true;
+    }
+    return false;
+  }
+  else if (turn == BLACK) {
+    for (int i = 0; i < p.nbc; i++) {
+      if (p.board[p.nbl][i] == BLACK) return true;
+    }
+    return false;
+  }
+  return false;
+}
+bool check_loose(bt_t p){
+  int turn = p.turn%2;
+  if (turn == WHITE) {
+    for (int i = 0; i < p.nbc; i++) {
+      if (p.board[p.nbl][i] == BLACK) return true;
+    }
+    return false;
+  }
+  else if (turn == BLACK) {
+    for (int i = 0; i < p.nbc; i++) {
+      if (p.board[0][i] == WHITE) return true;      
+    }
+    return false;
+  }
+  return false;
+}
+
+void dls(bt_t s, int d) {
+  long unsigned int i;
+  std::vector<bt_move_t> M;
+
+  if (_solution_size != 0) return;
+  H.insert(std::pair<bt_t,int> (s, d));
+
+  if (eval_heuristique(_best_s) > eval_heuristique(s)){
+    _best_s = s;
+  }
+  if (check_win(s)) {
+    _solution_size = d;
+    return;
+  }
+  if (check_loose(s) || d >= _max_depth) return;
+  M = nextMoves(s);
+  for (i = 0; i < M.size(); i++) {
+    bt_t s_prime = applyMove(s, M[i]);
+    auto recherche = H.find(s_prime);
+    if (recherche != H.end() && recherche->second >= d ){
+      _solution.insert(std::pair<int,bt_move_t> (d, M[i]));
+      dls(s_prime, d+1);
+    }
+    if (_solution_size != 0) break;
+  }
+}
+
+void ids(bt_t p) {
+  _solution.clear();
+  _solution_size = 0;
+  _best_s = p;
+  for (int d = 1; d < _max_depth; d++) {
+    H.clear();
+    _max_depth = d;
+    dls(p, 0);
+    if (_solution_size != 0) break;
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 void genmove() {
   int ret = B.endgame();
@@ -112,7 +216,8 @@ void genmove() {
     printf("= \n\n");
     return;
   }
-  bt_move_t m = get_heuristique_move();
+  ids(B);
+  bt_move_t m = _solution[1];
   B.play(m);
   if(verbose) {
     m.print(stderr, white_turn, B.nbl);
