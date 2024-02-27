@@ -38,15 +38,16 @@ bool verbose = true;
 bool showboard_at_each_move = false;
 #endif
 
+void name();
+void newgame();
+void showboard();
 
-
+std::string get_state(bt_t s);
 void dls(bt_t s, int d);
-void ids(bt_t _m);
-std::vector<bt_move_t> nextMoves(bt_t s);
-bt_t applyMove(bt_t s, bt_move_t move);
-bool check_win(bt_t p);
-bool check_loose(bt_t p);
+void ids();
 
+void genmove();
+void play(char a, char b, char c, char d);
 
 void help() {
   fprintf(stderr, "  quit\n");
@@ -81,51 +82,55 @@ void showboard() {
 }
 
 
-double eval_heuristique(bt_t p) {
+double bt_t::eval() {
   int i, j;
   double evaluation = 0.0;
   double res = 0.0;
-  int turn = p.turn%2;
+  int turn = bt_t::turn%2;
 
-  for (i = 0; i < p.nbl; i++){
-    for (j = 0; j < p.nbc; j++)
+  for (i = 0; i < bt_t::nbl; i++){
+    for (j = 0; j < bt_t::nbc; j++)
     { 
-      evaluation = 0;
-      if (turn == WHITE && p.board[i][j] == p.board[0][j] && p.board[i][j] == WHITE) {
-        evaluation += WIN;
-        if (debug) printf("win blanc\t");          
-      }  
-
-      if (turn == BLACK && p.board[i][j] == p.board[p.nbl-1][j] && p.board[i][j] == BLACK) {
-        evaluation += WIN;
-        if (debug) printf("win noire\t");          
+      if (bt_t::board[i][j] == EMPTY) continue;
+      else if (turn == WHITE) {
+        if (bt_t::board[i][j] == WHITE) {
+          if (bt_t::board[i][j] == bt_t::board[0][j]) {
+            evaluation += WIN;
+            if (debug) printf("win white\t");                
+          }
+          // nbr d'advairsaires et nbr d'alliés
+          evaluation += (10 * bt_t::nbl+1);
+          // couverture mutuelle et mise en danger d'un pion ?  
+          if(bt_t::board[i+1][j+1] == (bt_t::turn+1)%2) evaluation -= 1;
+          if(bt_t::board[i+1][j-1] == (bt_t::turn+1)%2) evaluation -= 1;
+          if(bt_t::board[i-1][j+1] == (bt_t::turn+1)%2) evaluation -= 1;
+          if(bt_t::board[i-1][j-1] == (bt_t::turn+1)%2) evaluation -= 1;
+          ///////////////////////////////////////////////////////////
+          if(bt_t::board[i+1][j+1] == bt_t::turn) evaluation += 1;
+          if(bt_t::board[i+1][j-1] == bt_t::turn) evaluation += 1;
+          if(bt_t::board[i-1][j+1] == bt_t::turn) evaluation += 1;
+          if(bt_t::board[i-1][j-1] == bt_t::turn) evaluation += 1;
+        }
       }
-      // nbr d'advairsaires et nbr d'alliés
-      if(p.board[i][j] == (turn+1)%2){
-        evaluation -= (10 * p.nbl+1);
-        // couverture mutuelle et mise en danger d'un pion ?  
-        if(p.board[i+1][j+1] == turn) evaluation -= 1;
-        if(p.board[i+1][j-1] == turn) evaluation -= 1;
-        if(p.board[i-1][j+1] == turn) evaluation -= 1;
-        if(p.board[i-1][j-1] == turn) evaluation -= 1;
-        ///////////////////////////////////////////////////////////
-        if(p.board[i+1][j+1] == (turn+1)%2) evaluation += 1;
-        if(p.board[i+1][j-1] == (turn+1)%2) evaluation += 1;
-        if(p.board[i-1][j+1] == (turn+1)%2) evaluation += 1;
-        if(p.board[i-1][j-1] == (turn+1)%2) evaluation += 1;
-      } 
-      if(p.board[i][j] == turn) {
-        evaluation += (10 * abs(i+1 - p.nbl));
-        // couverture mutuelle et mise en danger d'un pion ?  
-        if(p.board[i+1][j+1] == turn) evaluation += 1;
-        if(p.board[i+1][j-1] == turn) evaluation += 1;
-        if(p.board[i-1][j+1] == turn) evaluation += 1;
-        if(p.board[i-1][j-1] == turn) evaluation += 1;
-        ///////////////////////////////////////////////////////////
-        if(p.board[i+1][j+1] == (turn+1)%2) evaluation -= 1;
-        if(p.board[i+1][j-1] == (turn+1)%2) evaluation -= 1;
-        if(p.board[i-1][j+1] == (turn+1)%2) evaluation -= 1;
-        if(p.board[i-1][j-1] == (turn+1)%2) evaluation -= 1; 
+      else if (turn == (bt_t::turn+1)%2) {
+        if (bt_t::board[i][j] == (bt_t::turn+1)%2) {
+          if (bt_t::board[i][j] == bt_t::board[bt_t::nbl][j]) {
+            evaluation += WIN;
+            if (debug) printf("win black\t");                
+          }
+          // nbr d'advairsaires et nbr d'alliés
+          evaluation -= (10 * bt_t::nbl+1);
+          // couverture mutuelle et mise en danger d'un pion ?  
+          if(bt_t::board[i+1][j+1] == (bt_t::turn+1)%2) evaluation += 1;
+          if(bt_t::board[i+1][j-1] == (bt_t::turn+1)%2) evaluation += 1;
+          if(bt_t::board[i-1][j+1] == (bt_t::turn+1)%2) evaluation += 1;
+          if(bt_t::board[i-1][j-1] == (bt_t::turn+1)%2) evaluation += 1;
+          ///////////////////////////////////////////////////////////
+          if(bt_t::board[i+1][j+1] == bt_t::turn) evaluation -= 1;
+          if(bt_t::board[i+1][j-1] == bt_t::turn) evaluation -= 1;
+          if(bt_t::board[i-1][j+1] == bt_t::turn) evaluation -= 1;
+          if(bt_t::board[i-1][j-1] == bt_t::turn) evaluation -= 1;
+        }
       }
       if (debug) fprintf(stderr, "cases [%d][%d] : %0.1f\t", i,j, evaluation);
       res += evaluation;
@@ -150,27 +155,11 @@ std::string get_state(bt_t s) {
   }
   return p;
 }
-std::vector<bt_move_t> nextMoves(bt_t s) {
-  std::vector<bt_move_t> moves;
-  s.update_moves();
-  for (int i = 0; i < s.nb_moves; i++)
-  {
-    moves.push_back(s.moves[i]);
-  }
-  return moves;
-}
-
-bt_t applyMove(bt_t s, bt_move_t move) {
-  bt_t s_prime = s;
-  s_prime.play(move);
-  return s_prime;
-}
-
 
 void dls(bt_t s, int d) {
-  if (_solution_size != 0) return;
+  if ((_solution_size != 0) || ((double)(clock() - _chrono)/CLOCKS_PER_SEC) > TIME_LIMIT) return;
   H.insert({get_state(s), d});
-  if (eval_heuristique(_best_s) > eval_heuristique(s)){
+  if (_best_s.eval() < s.eval()){
     _best_s = s;
   }
   if (s.endgame() == _player) {
@@ -203,7 +192,7 @@ void ids() {
     H.clear();
     _max_depth = d;
     dls(B, 0);
-    if ((_solution_size != 0) || ((double)(clock() - _chrono)/CLOCKS_PER_SEC) > TIME_LIMIT)  break;
+    if ((_solution_size != 0) || ((double)(clock() - _chrono)/CLOCKS_PER_SEC) > TIME_LIMIT) break;
   }
 }
 
@@ -221,15 +210,14 @@ void genmove() {
     return;
   }
   ids();
-  B.play(_solution[_solution_size]);
+  B.play(_solution[0]);
   if(verbose) {
-    _solution[_solution_size].print(stderr, white_turn, B.nbl);
+    _solution[0].print(stderr, white_turn, B.nbl);
     fprintf(stderr, "\n");
   }
   white_turn = !white_turn;
-  printf("= %s\n\n", _solution[_solution_size].tostr(B.nbl).c_str());
-  // if(debug) 
-  showboard();
+  printf("= %s\n\n", _solution[0].tostr(B.nbl).c_str());
+  if(debug) showboard();
 }
 
 

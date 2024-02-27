@@ -1,100 +1,1160 @@
-nb_turn: 26   timers : [31m24.00[0m : 24.00
-6 . . . . 
-5 [31m@[0m [31m@[0m o [31m@[0m 
-4 [31m@[0m o . . 
-3 o [31m@[0m . o 
-2 . . . . 
-1 o [31m@[0m . . 
+[] name
+bc_ids_player started
+bc_ids_player receive name
+= bc_ids_player
+
+[] name
+rand_player started
+rand_player receive name
+= rand_player
+
+[bc_ids_player] newgame 6 4
+bc_ids_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[rand_player] newgame 6 4
+rand_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2b3c
+= 2b3c
+
+[rand_player] play 2b3c
+rand_player receive play 2b3c
+2b3c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5b4b[0m
+= 5b4b
+
+[bc_ids_player] play 5b4b
+bc_ids_player receive play 5b4b
+[31m5b4b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2a3a
+= 2a3a
+
+[rand_player] play 2a3a
+rand_player receive play 2a3a
+2a3a
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5d4c[0m
+= 5d4c
+
+[bc_ids_player] play 5d4c
+bc_ids_player receive play 5d4c
+[31m5d4c[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+3a4b
+= 3a4b
+
+[rand_player] play 3a4b
+rand_player receive play 3a4b
+3a4b
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5a4a[0m
+= 5a4a
+
+[bc_ids_player] play 5a4a
+bc_ids_player receive play 5a4a
+[31m5a4a[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+4b5c
+= 4b5c
+
+[rand_player] play 4b5c
+rand_player receive play 4b5c
+4b5c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m6b5a[0m
+= 6b5a
+
+[bc_ids_player] play 6b5a
+bc_ids_player receive play 6b5a
+[31m6b5a[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+5c6d
+= 5c6d
+
+[rand_player] play 5c6d
+rand_player receive play 5c6d
+5c6d
+= 
+
+nb_turn: 9   timers : 23.74 : 23.99
+6 @ . @ o 
+5 @ . . . 
+4 @ . @ . 
+3 . . o . 
+2 . . o o 
+1 o o o o 
   a b c d 
-(./player_B -11 24.00) (./player_A 11 24.00) => ./player_A win
-================= player2 WIN
-nb_turn: 26   timers : [31m24.00[0m : 24.00
-6 [31m@[0m . . . 
-5 . . . [31m@[0m 
-4 [31m@[0m o o [31m@[0m 
-3 . o [31m@[0m o 
-2 . . . . 
-1 [31m@[0m . . o 
-  a b c d 
-(./player_B -11 24.00) (./player_A 11 24.00) => ./player_A win
-================= player2 WIN
-nb_turn: 25   timers : [31m24.00[0m : 24.00
-6 . . . o 
-5 o [31m@[0m . . 
-4 . [31m@[0m [31m@[0m [31m@[0m 
-3 . . o [31m@[0m 
-2 . o [31m@[0m o 
-1 . . . o 
-  a b c d 
-(./player_B 12 24.00) (./player_A -12 24.00) => ./player_B win
+(./bc_ids_player 13 23.74) (./bc_rand_player -13 23.99) => ./bc_ids_player win
 ================= player1 WIN
-nb_turn: 28   timers : [31m24.00[0m : 24.00
-6 . . . . 
-5 . [31m@[0m . . 
-4 [31m@[0m o . [31m@[0m 
-3 o o . [31m@[0m 
-2 . . o . 
-1 . [31m@[0m o . 
+[bc_ids_player] newgame 6 4
+bc_ids_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[rand_player] newgame 6 4
+rand_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2a3a
+= 2a3a
+
+[rand_player] play 2a3a
+rand_player receive play 2a3a
+2a3a
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5b4b[0m
+= 5b4b
+
+[bc_ids_player] play 5b4b
+bc_ids_player receive play 5b4b
+[31m5b4b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+3a4b
+= 3a4b
+
+[rand_player] play 3a4b
+rand_player receive play 3a4b
+3a4b
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5d4d[0m
+= 5d4d
+
+[bc_ids_player] play 5d4d
+bc_ids_player receive play 5d4d
+[31m5d4d[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+4b5c
+= 4b5c
+
+[rand_player] play 4b5c
+rand_player receive play 4b5c
+4b5c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m6a5b[0m
+= 6a5b
+
+[bc_ids_player] play 6a5b
+bc_ids_player receive play 6a5b
+[31m6a5b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+5c6d
+= 5c6d
+
+[rand_player] play 5c6d
+rand_player receive play 5c6d
+5c6d
+= 
+
+nb_turn: 7   timers : 23.85 : 23.99
+6 . @ @ o 
+5 @ @ . . 
+4 . . . @ 
+3 . . . . 
+2 . o o o 
+1 o o o o 
   a b c d 
-(./player_B -10 24.00) (./player_A 10 24.00) => ./player_A win
-================= player2 WIN
-nb_turn: 22   timers : [31m24.00[0m : 24.00
-6 [31m@[0m [31m@[0m . . 
-5 . . . [31m@[0m 
-4 o [31m@[0m o o 
-3 . o . . 
-2 . . . o 
-1 . . [31m@[0m o 
-  a b c d 
-(./player_B -11 24.00) (./player_A 11 24.00) => ./player_A win
-================= player2 WIN
-nb_turn: 19   timers : [31m24.00[0m : 24.00
-6 . o [31m@[0m . 
-5 . . [31m@[0m [31m@[0m 
-4 [31m@[0m . [31m@[0m . 
-3 . o [31m@[0m o 
-2 o . . o 
-1 . . o o 
-  a b c d 
-(./player_B 13 24.00) (./player_A -13 24.00) => ./player_B win
+(./bc_ids_player 13 23.85) (./bc_rand_player -13 23.99) => ./bc_ids_player win
 ================= player1 WIN
-nb_turn: 30   timers : [31m24.00[0m : 24.00
-6 . . [31m@[0m . 
-5 [31m@[0m . . o 
-4 . . [31m@[0m . 
-3 [31m@[0m o . o 
-2 [31m@[0m . . . 
-1 o . [31m@[0m . 
+[bc_ids_player] newgame 6 4
+bc_ids_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[rand_player] newgame 6 4
+rand_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2b3c
+= 2b3c
+
+[rand_player] play 2b3c
+rand_player receive play 2b3c
+2b3c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5b4c[0m
+= 5b4c
+
+[bc_ids_player] play 5b4c
+bc_ids_player receive play 5b4c
+[31m5b4c[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2a3a
+= 2a3a
+
+[rand_player] play 2a3a
+rand_player receive play 2a3a
+2a3a
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5d4d[0m
+= 5d4d
+
+[bc_ids_player] play 5d4d
+bc_ids_player receive play 5d4d
+[31m5d4d[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+3a4b
+= 3a4b
+
+[rand_player] play 3a4b
+rand_player receive play 3a4b
+3a4b
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m6b5b[0m
+= 6b5b
+
+[bc_ids_player] play 6b5b
+bc_ids_player receive play 6b5b
+[31m6b5b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+4b5c
+= 4b5c
+
+[rand_player] play 4b5c
+rand_player receive play 4b5c
+4b5c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m4c3b[0m
+= 4c3b
+
+[bc_ids_player] play 4c3b
+bc_ids_player receive play 4c3b
+[31m4c3b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+5c6d
+= 5c6d
+
+[rand_player] play 5c6d
+rand_player receive play 5c6d
+5c6d
+= 
+
+nb_turn: 9   timers : 23.74 : 23.99
+6 @ . @ o 
+5 @ @ . . 
+4 . . . @ 
+3 . @ o . 
+2 . . o o 
+1 o o o o 
   a b c d 
-(./player_B -10 24.00) (./player_A 10 24.00) => ./player_A win
-================= player2 WIN
-nb_turn: 29   timers : [31m24.00[0m : 24.00
-6 . . o . 
-5 . [31m@[0m . . 
-4 . . o . 
-3 . [31m@[0m o o 
-2 . . [31m@[0m . 
-1 o . . . 
-  a b c d 
-(./player_B 8 24.00) (./player_A -8 24.00) => ./player_B win
+(./bc_ids_player 14 23.74) (./bc_rand_player -14 23.99) => ./bc_ids_player win
 ================= player1 WIN
-nb_turn: 30   timers : [31m24.00[0m : 24.00
-6 [31m@[0m . . . 
-5 . . . . 
-4 [31m@[0m . o [31m@[0m 
-3 o . [31m@[0m o 
-2 . . . . 
-1 . [31m@[0m . . 
+[bc_ids_player] newgame 6 4
+bc_ids_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[rand_player] newgame 6 4
+rand_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2b3c
+= 2b3c
+
+[rand_player] play 2b3c
+rand_player receive play 2b3c
+2b3c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5c4b[0m
+= 5c4b
+
+[bc_ids_player] play 5c4b
+bc_ids_player receive play 5c4b
+[31m5c4b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2a3a
+= 2a3a
+
+[rand_player] play 2a3a
+rand_player receive play 2a3a
+2a3a
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5b4a[0m
+= 5b4a
+
+[bc_ids_player] play 5b4a
+bc_ids_player receive play 5b4a
+[31m5b4a[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+3a4b
+= 3a4b
+
+[rand_player] play 3a4b
+rand_player receive play 3a4b
+3a4b
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m6c5c[0m
+= 6c5c
+
+[bc_ids_player] play 6c5c
+bc_ids_player receive play 6c5c
+[31m6c5c[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+4b5c
+= 4b5c
+
+[rand_player] play 4b5c
+rand_player receive play 4b5c
+4b5c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m6d5c[0m
+= 6d5c
+
+[bc_ids_player] play 6d5c
+bc_ids_player receive play 6d5c
+[31m6d5c[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+3c4d
+= 3c4d
+
+[rand_player] play 3c4d
+rand_player receive play 3c4d
+3c4d
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5c4c[0m
+= 5c4c
+
+[bc_ids_player] play 5c4c
+bc_ids_player receive play 5c4c
+[31m5c4c[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+4d5c
+= 4d5c
+
+[rand_player] play 4d5c
+rand_player receive play 4d5c
+4d5c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m6a5b[0m
+= 6a5b
+
+[bc_ids_player] play 6a5b
+bc_ids_player receive play 6a5b
+[31m6a5b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+5c6d
+= 5c6d
+
+[rand_player] play 5c6d
+rand_player receive play 5c6d
+5c6d
+= 
+
+nb_turn: 13   timers : 23.71 : 23.99
+6 . @ . o 
+5 @ @ . @ 
+4 @ . @ . 
+3 . . . . 
+2 . . o o 
+1 o o o o 
   a b c d 
-(./player_B -8 24.00) (./player_A 8 24.00) => ./player_A win
-================= player2 WIN
-nb_turn: 19   timers : [31m24.00[0m : 24.00
-6 . [31m@[0m [31m@[0m o 
-5 . . . [31m@[0m 
-4 o . [31m@[0m . 
-3 o . . [31m@[0m 
-2 . . . o 
-1 o . o o 
-  a b c d 
-(./player_B 12 24.00) (./player_A -12 24.00) => ./player_B win
+(./bc_ids_player 13 23.71) (./bc_rand_player -13 23.99) => ./bc_ids_player win
 ================= player1 WIN
+[bc_ids_player] newgame 6 4
+bc_ids_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[rand_player] newgame 6 4
+rand_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2b3c
+= 2b3c
+
+[rand_player] play 2b3c
+rand_player receive play 2b3c
+2b3c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5c4c[0m
+= 5c4c
+
+[bc_ids_player] play 5c4c
+bc_ids_player receive play 5c4c
+[31m5c4c[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2a3a
+= 2a3a
+
+[rand_player] play 2a3a
+rand_player receive play 2a3a
+2a3a
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m6d5c[0m
+= 6d5c
+
+[bc_ids_player] play 6d5c
+bc_ids_player receive play 6d5c
+[31m6d5c[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+3a4b
+= 3a4b
+
+[rand_player] play 3a4b
+rand_player receive play 3a4b
+3a4b
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5c4d[0m
+= 5c4d
+
+[bc_ids_player] play 5c4d
+bc_ids_player receive play 5c4d
+[31m5c4d[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+4b5c
+= 4b5c
+
+[rand_player] play 4b5c
+rand_player receive play 4b5c
+4b5c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m4c3b[0m
+= 4c3b
+
+[bc_ids_player] play 4c3b
+bc_ids_player receive play 4c3b
+[31m4c3b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+5c6d
+= 5c6d
+
+[rand_player] play 5c6d
+rand_player receive play 5c6d
+5c6d
+= 
+
+nb_turn: 9   timers : 23.76 : 23.99
+6 @ @ @ o 
+5 @ @ . @ 
+4 . . . @ 
+3 . @ o . 
+2 . . o o 
+1 o o o o 
+  a b c d 
+(./bc_ids_player 16 23.76) (./bc_rand_player -16 23.99) => ./bc_ids_player win
+================= player1 WIN
+[bc_ids_player] newgame 6 4
+bc_ids_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[rand_player] newgame 6 4
+rand_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2b3c
+= 2b3c
+
+[rand_player] play 2b3c
+rand_player receive play 2b3c
+2b3c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5d4d[0m
+= 5d4d
+
+[bc_ids_player] play 5d4d
+bc_ids_player receive play 5d4d
+[31m5d4d[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2a3a
+= 2a3a
+
+[rand_player] play 2a3a
+rand_player receive play 2a3a
+2a3a
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5b4b[0m
+= 5b4b
+
+[bc_ids_player] play 5b4b
+bc_ids_player receive play 5b4b
+[31m5b4b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+3a4b
+= 3a4b
+
+[rand_player] play 3a4b
+rand_player receive play 3a4b
+3a4b
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m6a5b[0m
+= 6a5b
+
+[bc_ids_player] play 6a5b
+bc_ids_player receive play 6a5b
+[31m6a5b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+4b5c
+= 4b5c
+
+[rand_player] play 4b5c
+rand_player receive play 4b5c
+4b5c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m6c5d[0m
+= 6c5d
+
+[bc_ids_player] play 6c5d
+bc_ids_player receive play 6c5d
+[31m6c5d[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+5c6d
+= 5c6d
+
+[rand_player] play 5c6d
+rand_player receive play 5c6d
+5c6d
+= 
+
+nb_turn: 9   timers : 23.74 : 23.99
+6 . @ . o 
+5 @ @ . @ 
+4 . . . @ 
+3 . . o . 
+2 . . o o 
+1 o o o o 
+  a b c d 
+(./bc_ids_player 13 23.74) (./bc_rand_player -13 23.99) => ./bc_ids_player win
+================= player1 WIN
+[bc_ids_player] newgame 6 4
+bc_ids_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[rand_player] newgame 6 4
+rand_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2b3c
+= 2b3c
+
+[rand_player] play 2b3c
+rand_player receive play 2b3c
+2b3c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5a4b[0m
+= 5a4b
+
+[bc_ids_player] play 5a4b
+bc_ids_player receive play 5a4b
+[31m5a4b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2a3a
+= 2a3a
+
+[rand_player] play 2a3a
+rand_player receive play 2a3a
+2a3a
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m6a5a[0m
+= 6a5a
+
+[bc_ids_player] play 6a5a
+bc_ids_player receive play 6a5a
+[31m6a5a[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+3a4b
+= 3a4b
+
+[rand_player] play 3a4b
+rand_player receive play 3a4b
+3a4b
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5b4c[0m
+= 5b4c
+
+[bc_ids_player] play 5b4c
+bc_ids_player receive play 5b4c
+[31m5b4c[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+4b5c
+= 4b5c
+
+[rand_player] play 4b5c
+rand_player receive play 4b5c
+4b5c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5a4a[0m
+= 5a4a
+
+[bc_ids_player] play 5a4a
+bc_ids_player receive play 5a4a
+[31m5a4a[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+5c6d
+= 5c6d
+
+[rand_player] play 5c6d
+rand_player receive play 5c6d
+5c6d
+= 
+
+nb_turn: 9   timers : 23.75 : 23.99
+6 . @ @ o 
+5 . . . @ 
+4 @ . @ . 
+3 . . o . 
+2 . . o o 
+1 o o o o 
+  a b c d 
+(./bc_ids_player 13 23.75) (./bc_rand_player -13 23.99) => ./bc_ids_player win
+================= player1 WIN
+[bc_ids_player] newgame 6 4
+bc_ids_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[rand_player] newgame 6 4
+rand_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2a3a
+= 2a3a
+
+[rand_player] play 2a3a
+rand_player receive play 2a3a
+2a3a
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5c4d[0m
+= 5c4d
+
+[bc_ids_player] play 5c4d
+bc_ids_player receive play 5c4d
+[31m5c4d[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+3a4b
+= 3a4b
+
+[rand_player] play 3a4b
+rand_player receive play 3a4b
+3a4b
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5d4c[0m
+= 5d4c
+
+[bc_ids_player] play 5d4c
+bc_ids_player receive play 5d4c
+[31m5d4c[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+4b5c
+= 4b5c
+
+[rand_player] play 4b5c
+rand_player receive play 4b5c
+4b5c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m4c3b[0m
+= 4c3b
+
+[bc_ids_player] play 4c3b
+bc_ids_player receive play 4c3b
+[31m4c3b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+5c6d
+= 5c6d
+
+[rand_player] play 5c6d
+rand_player receive play 5c6d
+5c6d
+= 
+
+nb_turn: 7   timers : 23.84 : 23.99
+6 @ @ @ o 
+5 @ @ . . 
+4 . . . @ 
+3 . @ . . 
+2 . o o o 
+1 o o o o 
+  a b c d 
+(./bc_ids_player 15 23.84) (./bc_rand_player -15 23.99) => ./bc_ids_player win
+================= player1 WIN
+[bc_ids_player] newgame 6 4
+bc_ids_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[rand_player] newgame 6 4
+rand_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2b3c
+= 2b3c
+
+[rand_player] play 2b3c
+rand_player receive play 2b3c
+2b3c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5b4c[0m
+= 5b4c
+
+[bc_ids_player] play 5b4c
+bc_ids_player receive play 5b4c
+[31m5b4c[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2a3a
+= 2a3a
+
+[rand_player] play 2a3a
+rand_player receive play 2a3a
+2a3a
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5c4b[0m
+= 5c4b
+
+[bc_ids_player] play 5c4b
+bc_ids_player receive play 5c4b
+[31m5c4b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+3a4b
+= 3a4b
+
+[rand_player] play 3a4b
+rand_player receive play 3a4b
+3a4b
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5a4a[0m
+= 5a4a
+
+[bc_ids_player] play 5a4a
+bc_ids_player receive play 5a4a
+[31m5a4a[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+4b5c
+= 4b5c
+
+[rand_player] play 4b5c
+rand_player receive play 4b5c
+4b5c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m6b5b[0m
+= 6b5b
+
+[bc_ids_player] play 6b5b
+bc_ids_player receive play 6b5b
+[31m6b5b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+5c6d
+= 5c6d
+
+[rand_player] play 5c6d
+rand_player receive play 5c6d
+5c6d
+= 
+
+nb_turn: 9   timers : 23.74 : 23.99
+6 @ . @ o 
+5 . @ . @ 
+4 @ . @ . 
+3 . . o . 
+2 . . o o 
+1 o o o o 
+  a b c d 
+(./bc_ids_player 14 23.74) (./bc_rand_player -14 23.99) => ./bc_ids_player win
+================= player1 WIN
+[bc_ids_player] newgame 6 4
+bc_ids_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[rand_player] newgame 6 4
+rand_player receive newgame 6 4
+ready to play on 6x4 board
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2b3c
+= 2b3c
+
+[rand_player] play 2b3c
+rand_player receive play 2b3c
+2b3c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5b4b[0m
+= 5b4b
+
+[bc_ids_player] play 5b4b
+bc_ids_player receive play 5b4b
+[31m5b4b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+2a3a
+= 2a3a
+
+[rand_player] play 2a3a
+rand_player receive play 2a3a
+2a3a
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5c4c[0m
+= 5c4c
+
+[bc_ids_player] play 5c4c
+bc_ids_player receive play 5c4c
+[31m5c4c[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+3a4b
+= 3a4b
+
+[rand_player] play 3a4b
+rand_player receive play 3a4b
+3a4b
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m6b5b[0m
+= 6b5b
+
+[bc_ids_player] play 6b5b
+bc_ids_player receive play 6b5b
+[31m6b5b[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+4b5c
+= 4b5c
+
+[rand_player] play 4b5c
+rand_player receive play 4b5c
+4b5c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m6d5c[0m
+= 6d5c
+
+[bc_ids_player] play 6d5c
+bc_ids_player receive play 6d5c
+[31m6d5c[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+3c4d
+= 3c4d
+
+[rand_player] play 3c4d
+rand_player receive play 3c4d
+3c4d
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m4c3d[0m
+= 4c3d
+
+[bc_ids_player] play 4c3d
+bc_ids_player receive play 4c3d
+[31m4c3d[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+4d5c
+= 4d5c
+
+[rand_player] play 4d5c
+rand_player receive play 4d5c
+4d5c
+= 
+
+[rand_player] genmove
+rand_player receive genmove
+[31m5a4a[0m
+= 5a4a
+
+[bc_ids_player] play 5a4a
+bc_ids_player receive play 5a4a
+[31m5a4a[0m
+= 
+
+[bc_ids_player] genmove
+bc_ids_player receive genmove
+5c6d
+= 5c6d
+
+[rand_player] play 5c6d
+rand_player receive play 5c6d
+5c6d
+= 
+
+nb_turn: 13   timers : 23.71 : 23.98
+6 @ . @ o 
+5 . @ . @ 
+4 @ . . . 
+3 . . . @ 
+2 . . o o 
+1 o o o o 
+  a b c d 
+(./bc_ids_player 13 23.71) (./bc_rand_player -13 23.98) => ./bc_ids_player win
+================= player1 WIN
+[bc_ids_player] quit
+bc_ids_player receive quit
+bye.
+= 
+
+[rand_player] quit
+rand_player receive quit
+bye.
+= 
+

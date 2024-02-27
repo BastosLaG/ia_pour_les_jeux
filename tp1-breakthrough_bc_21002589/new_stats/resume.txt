@@ -1,10 +1,10 @@
  ================
   NB_GAMES_PER_SIDE 10
-  NBL 8
-  NBC 8
+  NBL 6
+  NBC 4
 
   number of wins
  ================
-    ./rand_player is 0
-    ./ids_player is 0
+    ./bc_rand_player is 1
+    ./bc_ids_player is 19
  ================
