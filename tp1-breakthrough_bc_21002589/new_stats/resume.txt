@@ -1,0 +1,10 @@
+ ================
+  NB_GAMES_PER_SIDE 10
+  NBL 8
+  NBC 8
+
+  number of wins
+ ================
+    ./rand_player is 0
+    ./ids_player is 0
+ ================
