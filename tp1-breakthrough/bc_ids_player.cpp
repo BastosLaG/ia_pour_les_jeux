@@ -1,11 +1,13 @@
- #include <cstdio>
+#include <cstdio>
 #include <cstdlib>
-#include <string.h>
-#include <iostream>
+#include <cmath>
 #include <string>
 #include <vector>
+#include <string.h>
+#include <iostream>
 #include <map>
-#include <cmath>
+#include <unordered_map>
+#include <functional>
 #include "mybt.h"
 
 bt_t B;
@@ -19,7 +21,22 @@ bt_t _best_s;
 bool white_turn = true;
 bool debug = false;
 
-std::map<bt_t, int> H;
+struct board_hash {
+    std::size_t operator()(const int (&board)[MAX_LINES][MAX_COLS]) const {
+        std::size_t hash_value = 0;
+        std::hash<int> hasher;
+
+        for (int i = 0; i < MAX_LINES; ++i) {
+            for (int j = 0; j < MAX_COLS; ++j) {
+                hash_value ^= hasher(board[i][j]) + 0x9e3779b9 + (hash_value << 6) + (hash_value >> 2);
+            }
+        }
+
+        return hash_value;
+    }
+};
+std::unordered_map<const int[MAX_LINES][MAX_COLS], int, board_hash> H;
+
 std::map<int, bt_move_t> _solution;
 
 
@@ -30,6 +47,7 @@ std::map<int, bt_move_t> _solution;
 bool verbose = true;
 bool showboard_at_each_move = false;
 #endif
+
 
 
 void dls(bt_t s, int d);
@@ -151,13 +169,13 @@ bool check_loose(bt_t p){
   int turn = p.turn%2;
   if (turn == WHITE) {
     for (int i = 0; i < p.nbc; i++) {
-      if (p.board[p.nbl][i] == BLACK) return true;
+      if (p.board[p.nbl-1][i] == BLACK) return true;
     }
     return false;
   }
   else if (turn == BLACK) {
     for (int i = 0; i < p.nbc; i++) {
-      if (p.board[0][i] == WHITE) return true;      
+      if (p.board[1][i] == WHITE) return true;      
     }
     return false;
   }
@@ -169,7 +187,7 @@ void dls(bt_t s, int d) {
   std::vector<bt_move_t> M;
 
   if (_solution_size != 0) return;
-  H.insert(std::pair<bt_t,int> (s, d));
+  H.emplace(std::pair(s.board, d));
 
   if (eval_heuristique(_best_s) > eval_heuristique(s)){
     _best_s = s;
@@ -182,7 +200,7 @@ void dls(bt_t s, int d) {
   M = nextMoves(s);
   for (i = 0; i < M.size(); i++) {
     bt_t s_prime = applyMove(s, M[i]);
-    auto recherche = H.find(s_prime);
+    auto recherche = H.find(s_prime.board);
     if (recherche != H.end() && recherche->second >= d ){
       _solution.insert(std::pair<int,bt_move_t> (d, M[i]));
       dls(s_prime, d+1);
