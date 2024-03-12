@@ -406,101 +406,97 @@ void run_many_games(btp_game game, int _nb_games_to_play, int verbose) {
 }
 
 int main() {
-    int i;
-    string winner;
-    array(string) contestants = ({ "./Player1", "./Player2", "./Player3", "./Player4", "./Player5", "./Player6", "./Player7", "./Player8" });
-    array(string) semis = ({});
-    array(string) finale = ({});
+  int i;
+  string winner;
+  array(string) contestants = ({ "./Player1", "./Player2", "./Player3", "./Player4", "./Player5", "./Player6", "./Player7", "./Player8" });
+  array(string) semis = ({});
+  array(string) finale = ({});
 
-    for (i=0;i<7;i+=2){
-        btp_game game = btp_game(contestants[i],contestants[i+1], 6, 4, "", 0, 0);
-        if (game) {
-            run_many_games(game, 1,0);
-        }
-        if(game->p0_new_win == 1) {
-            winner = game->p0_name;
-            semis += ({winner});
-        } else if(game->p1_new_win == 1) {
-            winner = game->p1_name;
-            semis += ({winner});
-        }
+  for (i=0;i<7;i+=2){
+      btp_game game = btp_game(contestants[i],contestants[i+1], 6, 4, "", 0, 0);
+      if (game) {
+          run_many_games(game, 1,0);
+      }
+      if(game->p0_new_win == 1) {
+          winner = game->p0_name;
+          semis += ({winner});
+      } else if(game->p1_new_win == 1) {
+          winner = game->p1_name;
+          semis += ({winner});
+      }
+  }
+  
+  for (i=0;i<3;i+=2){
+      btp_game game = btp_game(semis[i],semis[i+1], 6, 4, "", 0, 0);
+      if (game) {
+          run_many_games(game, 1,0);
+      }
+      if(game->p0_new_win == 1) {
+          winner = game->p0_name;
+          finale += ({winner});
+      } else if(game->p1_new_win == 1) {
+          winner = game->p1_name;
+          finale += ({winner});
+      }
+  }
+
+  btp_game game = btp_game(finale[0],finale[1], 6, 4, "", 0, 0);
+    if (game) {
+      run_many_games(game, 1,0);
     }
-    
-    for (i=0;i<3;i+=2){
-        btp_game game = btp_game(semis[i],semis[i+1], 6, 4, "", 0, 0);
-        if (game) {
-            run_many_games(game, 1,0);
-        }
-        if(game->p0_new_win == 1) {
-            winner = game->p0_name;
-            finale += ({winner});
-        } else if(game->p1_new_win == 1) {
-            winner = game->p1_name;
-            finale += ({winner});
-        }
+    if(game->p0_new_win == 1) {
+        winner = game->p0_name;
+    } else if(game->p1_new_win == 1) {
+      winner = game->p1_name;
     }
-
-    btp_game game = btp_game(finale[0],finale[1], 6, 4, "", 0, 0);
-        if (game) {
-            run_many_games(game, 1,0);
-        }
-        if(game->p0_new_win == 1) {
-            winner = game->p0_name;
-        } else if(game->p1_new_win == 1) {
-            winner = game->p1_name;
-        }
-
     for(i=0;i<15;i++){
-        if(i%2==0){
-            int eliminated = 1;
-            for (int j=0; j < sizeof(semis); j++){
-                if (contestants[i/2] == semis[j]) {
-                    eliminated = 0;
-                    break;
-                }
-            }
-
-            if (eliminated) {
-                werror("\x1b[31m%s\x1b[0m\n", contestants[i/2]);
-            } else {
-                werror("%s\n", contestants[i/2]);
-            }
-        }
-        if(i%4==0){
-            int eliminated = 1;
-            for (int j=0; j < sizeof(finale); j++){
-                if (semis[i/4] == finale[j]) {
-                    eliminated = 0;
-                    break;
-                }
-            }
-
-            if (eliminated) {
-                werror("\t\x1b[31m%s\x1b[0m\n", semis[i/4]);
-            } else {
-                werror("\t%s\n", semis[i/4]);
-            }
-        }
-        if(i==3){
-          if (finale[0]!=winner){
-            werror("\t\t\x1b[31m%s\x1b[0m\n", finale[0]);
-          }
-          else{
-            werror("\t\t%s\n", finale[0]);
+      if(i%2==0){
+        int eliminated = 1;
+        for (int j=0; j < sizeof(semis); j++){
+          if (contestants[i/2] == semis[j]) {
+            eliminated = 0;
+            break;
           }
         }
-        if(i==10){
-          if (finale[1]!=winner){
-            werror("\t\t\x1b[31m%s\x1b[0m\n", finale[1]);
-          }
-          else{
-            werror("\t\t%s\n", finale[1]);
+        if (eliminated) {
+            werror("\x1b[31m%s\x1b[0m\n", contestants[i/2]);
+        } else {
+            werror("%s\n", contestants[i/2]);
+        }
+      }
+      if(i%4==0){
+        int eliminated = 1;
+        for (int j=0; j < sizeof(finale); j++){
+          if (semis[i/4] == finale[j]) {
+              eliminated = 0;
+              break;
           }
         }
-        if(i==7){
-          werror("\t\t\t\x1b[32m%s\x1b[0m\n",winner);
+        if (eliminated) {
+          werror("\t\x1b[31m%s\x1b[0m\n", semis[i/4]);
+        } else {
+          werror("\t%s\n", semis[i/4]);
         }
-    }
-
-    return 0;
+      }
+      if(i==3){
+        if (finale[0]!=winner){
+          werror("\t\t\x1b[31m%s\x1b[0m\n", finale[0]);
+        }
+        else{
+          werror("\t\t%s\n", finale[0]);
+        }
+      }
+      if(i==10){
+        if (finale[1]!=winner){
+          werror("\t\t\x1b[31m%s\x1b[0m\n", finale[1]);
+        }
+        else{
+          werror("\t\t%s\n", finale[1]);
+        }
+      }
+      if(i==7){
+      werror("\t\t\t\x1b[32m%s\x1b[0m\n",winner);
+      }
+  }
+  return 0;
 }

@@ -1,0 +1,90 @@
+nb_turn: 14   timers : 24.00 : 24.00
+5 . @ . 
+4 o @ o 
+3 o . o 
+2 . . . 
+1 o @ . 
+  a b c 
+(./player_B -8 24.00) (./player_A 8 24.00) => ./player_A win
+================= player2 WIN
+nb_turn: 16   timers : 24.00 : 24.00
+5 @ . . 
+4 . @ @ 
+3 o . . 
+2 . o o 
+1 . @ . 
+  a b c 
+(./player_B -7 24.00) (./player_A 7 24.00) => ./player_A win
+================= player2 WIN
+nb_turn: 15   timers : 24.00 : 24.00
+5 . . o 
+4 @ @ . 
+3 @ . @ 
+2 o o @ 
+1 . o . 
+  a b c 
+(./player_B 9 24.00) (./player_A -9 24.00) => ./player_B win
+================= player1 WIN
+nb_turn: 6   timers : 24.00 : 24.00
+5 @ @ @ 
+4 @ @ . 
+3 . . o 
+2 . o . 
+1 . @ o 
+  a b c 
+(./player_B -9 24.00) (./player_A 9 24.00) => ./player_A win
+================= player2 WIN
+nb_turn: 21   timers : 24.00 : 24.00
+5 . o . 
+4 o . . 
+3 . @ @ 
+2 . o @ 
+1 . . . 
+  a b c 
+(./player_B 6 24.00) (./player_A -6 24.00) => ./player_B win
+================= player1 WIN
+nb_turn: 9   timers : 24.00 : 24.00
+5 o . @ 
+4 @ . . 
+3 . o . 
+2 o @ . 
+1 . o o 
+  a b c 
+(./player_B 8 24.00) (./player_A -8 24.00) => ./player_B win
+================= player1 WIN
+nb_turn: 17   timers : 24.00 : 24.00
+5 @ o . 
+4 . . . 
+3 @ o . 
+2 o @ . 
+1 . . . 
+  a b c 
+(./player_B 6 24.00) (./player_A -6 24.00) => ./player_B win
+================= player1 WIN
+nb_turn: 13   timers : 24.00 : 24.00
+5 . @ o 
+4 @ @ . 
+3 @ . @ 
+2 o . @ 
+1 o . o 
+  a b c 
+(./player_B 10 24.00) (./player_A -10 24.00) => ./player_B win
+================= player1 WIN
+nb_turn: 9   timers : 24.00 : 24.00
+5 . @ o 
+4 @ . @ 
+3 @ . . 
+2 o @ o 
+1 o o . 
+  a b c 
+(./player_B 10 24.00) (./player_A -10 24.00) => ./player_B win
+================= player1 WIN
+nb_turn: 18   timers : 24.00 : 24.00
+5 . . . 
+4 . @ o 
+3 . . o 
+2 o . o 
+1 @ . . 
+  a b c 
+(./player_B -6 24.00) (./player_A 6 24.00) => ./player_A win
+================= player2 WIN

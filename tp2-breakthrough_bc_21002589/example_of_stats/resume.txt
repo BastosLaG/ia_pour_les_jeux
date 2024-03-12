@@ -1,0 +1,13 @@
+ ================
+  CLA_or_MIS_game 0
+  ALT_or_SIM_game 0
+  CI_or_II_game 0
+  NB_GAMES_PER_SIDE 10
+  NBL 5
+  NBC 3
+
+  number of wins
+ ================
+    ./player_A is  9
+    ./player_B is  11
+ ================

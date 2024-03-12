@@ -1,0 +1,11 @@
+newgame 5 3
+mode sim
+play 2a3a 4a3b
+showboard
+play 3a4b 4b3a
+showboard
+quit
+
+
+
+

@@ -1,0 +1,14 @@
+newgame 5 3
+mode drk
+setboard 0 ??????...oooooo
+showboard
+play 2a3b
+showboard
+setboard 1 @@@@@@.o.??????
+showboard
+play 4a3a
+showboard
+setboard 2 ???.@@@o..ooooo
+showboard
+play 3b4c
+showboard

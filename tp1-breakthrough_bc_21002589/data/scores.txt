@@ -134,3 +134,10 @@
  (./Player2 3 23.99) (./Player4 -3 23.99) => ./Player2 win
  (./Player6 12 24.00) (./Player7 -12 23.53) => ./Player6 win
  (./Player2 3 23.99) (./Player6 -3 23.99) => ./Player2 win
+ (./Player1 -13 24.00) (./Player2 13 24.00) => ./Player2 win
+ (./Player3 -13 24.00) (./Player4 13 24.00) => ./Player4 win
+ (./Player5 -13 24.00) (./Player6 13 24.00) => ./Player6 win
+ (./Player7 13 23.75) (./Player8 -13 24.00) => ./Player7 win
+ (./Player2 3 23.99) (./Player4 -3 23.99) => ./Player2 win
+ (./Player6 12 24.00) (./Player7 -12 23.52) => ./Player6 win
+ (./Player2 3 23.99) (./Player6 -3 23.99) => ./Player2 win
