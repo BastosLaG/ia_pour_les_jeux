@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <time.h>
 #include <vector>
+#include <limits>
 
 #define IDS_MAX_DEPTH 10
 #define TIME_LIMIT 0.95
@@ -23,8 +24,6 @@ bt_move_t _solution[IDS_MAX_DEPTH];
 std::unordered_map<std::string, int> H;
 bt_t _best_s;
 double _chrono = clock();
-bool white_turn = true;
-bool debug = false;
 
 #define WIN 300
 
@@ -59,7 +58,7 @@ void help() {
 }
 
 void name() {
-	printf("= bc_heuristique_player\n\n");
+	printf("= bc_ubfm_player\n\n");
 }
 
 void newgame() {
@@ -202,19 +201,6 @@ double eval(bt_t s) {
 
 
 bt_t selection(bt_t sp) {
-	/*
-	vector<bt_move_t> m = nextMoves(sp);
-	{min, max, best} = {infini, -infini, null};
-	for (int i = 0; i < sp.nb_moves; i++){
-		bt_t spp play(sp, m[i]);
-		if H.find(spp) return spp;
-		if sp.turn%2 == 0 
-			if max < H[spp] {max, best} = {H[spp], spp};
-		else 
-			if min < H[spp] {min, best} = {H[spp], spp};
-	}
-	return selection(best)
-	*/
 	int i;
 	bt_t spp;
 	bt_t best;
@@ -227,11 +213,12 @@ bt_t selection(bt_t sp) {
 		spp.play(sp.moves[i]);
 		hash = get_state(spp);
 		if (H.find(hash) != H.end()) return spp;
-		if (sp.turn%2 == 0) 
+		if (sp.turn%2 == 0) {
 			if (H[hash] > max) {
 				max = H[hash];
 				best = spp;
 			} 
+		}
 		else { 
 			if (H[hash] > min) {
 				min  = H[hash];
@@ -247,7 +234,7 @@ void expension(bt_t sp) {
 	bt_t spp;
 	std::string hash;
 	sp.update_moves();
-	for (i; i < sp.nb_moves; i++) {
+	for (i = 0; i < sp.nb_moves; i++) {
 		spp = sp;
 		spp.play(sp.moves[i]);
 		hash = get_state(spp);
@@ -292,7 +279,7 @@ bt_t backpropagate(bt_t sp) {
 		H[h2] = min;
 	}
 	if (h2 == get_state(ROOT)) {
-		return;
+		return ROOT;
 	}
 	p = get_parent(sp);
 	return backpropagate(p);
@@ -322,10 +309,10 @@ int main(int _ac, char** _av) {
 	bool echo_on = false;
 	setbuf(stdout, 0);
 	setbuf(stderr, 0);
-	if(verbose) fprintf(stderr, "bc_heuristique_player started\n");
+	if(verbose) fprintf(stderr, "bc_ubfm_player started\n");
 	char a,b,c,d; // for play cmd
 	for (std::string line; std::getline(std::cin, line);) {
-		if(verbose) fprintf(stderr, "bc_heuristique_player receive %s\n", line.c_str());
+		if(verbose) fprintf(stderr, "bc_ubfm_player receive %s\n", line.c_str());
 		if(echo_on) if(verbose) fprintf(stderr, "%s\n", line.c_str());
 		if(line.compare("quit") == 0) { printf("= \n\n"); break; }
 		else if(line.compare("echo ON") == 0) echo_on = true;
