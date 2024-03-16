@@ -11,7 +11,7 @@
 
 #define IDS_MAX_DEPTH 10
 #define TIME_LIMIT 0.95
-bt_t ROOT;
+std::string ROOT;
 bt_t B;
 int boardwidth = 0;
 int boardheight = 0;
@@ -43,7 +43,7 @@ void play(char a, char b, char c, char d);
 double eval(bt_t s);
 bt_t selection(bt_t sp);
 void expension(bt_t sp);
-bt_t backpropagate(bt_t sp);
+void backpropagate(bt_t sp);
 void ubfm(bt_t s);
 
 void help() {
@@ -244,7 +244,7 @@ void expension(bt_t sp) {
 	}
 }
 
-bt_t backpropagate(bt_t sp) {
+void backpropagate(bt_t sp) {
 	int i;
 	bt_t spp;
 	bt_t p;
@@ -278,26 +278,18 @@ bt_t backpropagate(bt_t sp) {
 		}
 		H[h2] = min;
 	}
-	if (h2 == get_state(ROOT)) {
-		return ROOT;
+	if (h2 == ROOT) {
+		return;
 	}
 	p = get_parent(sp);
 	return backpropagate(p);
 }
 
 void ubfm(bt_t s){
-	/*
-	reinitialisation de la table de Hashage
-	H[s] ajout 0; 
-	while not-interrupeted do 
-		bt_t s_prime = selection de (s) 
-		expension(s_prime)
-		backpropagate(s_prime)
-	*/ 
 	H.clear();
 	H.insert({get_state(s), 0});
 	_chrono = clock();
-	ROOT = s;
+	ROOT = get_state(s);
 	while (((double)(clock() - _chrono)/CLOCKS_PER_SEC) < TIME_LIMIT) {
 		bt_t s_prime = selection(s);
 		expension(s_prime);
