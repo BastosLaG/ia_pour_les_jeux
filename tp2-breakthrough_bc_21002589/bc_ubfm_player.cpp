@@ -9,9 +9,8 @@
 #include <vector>
 #include <limits>
 
-#define IDS_MAX_DEPTH 10
-#define TIME_LIMIT 0.95
-#define WIN 300
+#define TIME_LIMIT 0.15
+#define UBFM_DEPTH_LIMIT 50
 
 bt_t B;
 int boardwidth = 0;
@@ -19,21 +18,25 @@ int boardheight = 0;
 bool white_turn = true;
 
 // mes vars
-bt_t _best_s;
-std::string ROOT;
-bt_move_t _solution[IDS_MAX_DEPTH];
 std::unordered_map<std::string, int> H;
+bt_move_t _best_move;
+int _player = EMPTY;
+char _k[128], _root[128];
+int _depth = 0;
+std::vector<bt_t> _parents (UBFM_DEPTH_LIMIT);
+int _infini_p = std::numeric_limits<int>::max();
+int _infini_n = std::numeric_limits<int>::min();
 double _chrono = clock();
-bool debug = false;
+bool _debug = false;
 
-// mes fonctions
-std::string get_state(bt_t s);
-bt_t get_parent(bt_t sp);
-double eval(bt_t s);
-bt_t selection(bt_t sp);
-void expension(bt_t sp);
-void backpropagate(bt_t sp);
-void ubfm(bt_t s);
+char playername[128];
+
+#ifndef VERBOSE_PLAYER
+#define VERBOSE_PLAYER
+bool verbose = true;
+bool showboard_at_each_move = false;
+#endif
+
 
 // Fonctions cours
 void help();
@@ -51,13 +54,15 @@ void genmove(char _turn);
 void play(char a0, char a1, char a2, char a3);
 void play(char a0, char a1, char a2, char a3, char b0, char b1, char b2, char b3);
 
-char playername[128];
-
-#ifndef VERBOSE_PLAYER
-#define VERBOSE_PLAYER
-bool verbose = true;
-bool showboard_at_each_move = false;
-#endif
+// mes fonctions
+bt_t selection(bt_t, int);
+bt_t selection(bt_t);
+void expansion(bt_t, int);
+void expansion(bt_t);
+void backpropagate(bt_t, int);
+void backpropagate(bt_t);
+bt_move_t ubfm(int);
+bt_move_t ubfm();
 
 int main(int _ac, char** _av) {
   bool echo_on = false;
@@ -119,179 +124,290 @@ int main(int _ac, char** _av) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Mes fonctions 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::string get_state(bt_t s) {
-	std::string p;
-	for (int x = 0; x < boardheight; x++) {
-		for (int y = 0; y < boardwidth; y++) {
-			p.push_back((char)s.board[x][y]+'0');
-		}
-	}
-	return p;
-}
 
-bt_t get_parent(bt_t sp) {
-	bt_t s = sp;
-	return s;
-}
-
-double eval(bt_t s) {
-  int i, j;
-  double evaluation = 0.0;
-  double res = 0.0;
-  int turn = s.turn%2;
-
-  for (i = 0; i < s.nbl; i++){
-    for (j = 0; j < s.nbc; j++)
-    { 
-      if (s.board[i][j] == EMPTY) continue;
-      else if (turn == WHITE) {
-        if (s.board[i][j] == WHITE) {
-          if (s.board[i][j] == s.board[0][j]) {
-            evaluation += WIN;
-            if (debug) printf("win white\t");                
-          }
-          // nbr d'advairsaires et nbr d'alliés
-          evaluation += (10 * s.nbl+1);
-          // couverture mutuelle et mise en danger d'un pion ?  
-          if(s.board[i+1][j+1] == (s.turn+1)%2) evaluation -= 1;
-          if(s.board[i+1][j-1] == (s.turn+1)%2) evaluation -= 1;
-          if(s.board[i-1][j+1] == (s.turn+1)%2) evaluation -= 1;
-          if(s.board[i-1][j-1] == (s.turn+1)%2) evaluation -= 1;
-          ///////////////////////////////////////////////////////////
-          if(s.board[i+1][j+1] == s.turn) evaluation += 1;
-          if(s.board[i+1][j-1] == s.turn) evaluation += 1;
-          if(s.board[i-1][j+1] == s.turn) evaluation += 1;
-          if(s.board[i-1][j-1] == s.turn) evaluation += 1;
+bt_t selection(bt_t s, int player) {
+  s.update_moves(player);
+  int min = _infini_p, max = _infini_n;
+  bt_t best = s;
+  for (int m = 0; m < s.nb_moves; m++) {
+    bt_t sp = s;
+    sp.play(s.moves[m]);
+    sp.get_board(_k);
+    H.find(std::string(_k));
+    if (H.find(std::string(_k)) == H.end()) {
+      return s;
+    }
+    if (s.turn%2 == 0) {
+      if (max < H[std::string(_k)]) {
+        max = H[std::string(_k)];
+        best = sp;
+        if (_depth == 0) {
+          _best_move = s.moves[m];
         }
       }
-      else if (turn == (s.turn+1)%2) {
-        if (s.board[i][j] == (s.turn+1)%2) {
-          if (s.board[i][j] == s.board[s.nbl][j]) {
-            evaluation += WIN;
-            if (debug) printf("win black\t");                
-          }
-          // nbr d'advairsaires et nbr d'alliés
-          evaluation -= (10 * s.nbl+1);
-          // couverture mutuelle et mise en danger d'un pion ?  
-          if(s.board[i+1][j+1] == (s.turn+1)%2) evaluation += 1;
-          if(s.board[i+1][j-1] == (s.turn+1)%2) evaluation += 1;
-          if(s.board[i-1][j+1] == (s.turn+1)%2) evaluation += 1;
-          if(s.board[i-1][j-1] == (s.turn+1)%2) evaluation += 1;
-          ///////////////////////////////////////////////////////////
-          if(s.board[i+1][j+1] == s.turn) evaluation -= 1;
-          if(s.board[i+1][j-1] == s.turn) evaluation -= 1;
-          if(s.board[i-1][j+1] == s.turn) evaluation -= 1;
-          if(s.board[i-1][j-1] == s.turn) evaluation -= 1;
+    } else {
+      if (min > H[std::string(_k)]) {
+        min = H[std::string(_k)];
+        best = sp;
+        if (_depth == 0) {
+          _best_move = s.moves[m];
         }
       }
-      if (debug) fprintf(stderr, "cases [%d][%d] : %0.1f\t", i,j, evaluation);
-      res += evaluation;
-    } 
-    if (debug) printf("\n");
+    }
   }
-  if(debug) if(turn%2==0) fprintf(stderr, "White plateau || Eval = %0.1f\n", evaluation);
-  if(debug) if(turn%2==1) fprintf(stderr, "Black plateau || Eval = %0.1f\n", evaluation);
+  if (_depth == UBFM_DEPTH_LIMIT-1) {
+    return s;
+  }
+  _parents[++_depth] = best;
+  return selection(best, player);
+}
 
-  return evaluation;
+bt_t selection(bt_t s) {
+  s.update_moves();
+  int min = _infini_p, max = _infini_n;
+  bt_t best = s;
+  for (int m = 0; m < s.nb_moves; m++) {
+    bt_t sp = s;
+    sp.play(s.moves[m]);
+    sp.get_board(_k);
+    H.find(std::string(_k));
+    if (H.find(std::string(_k)) == H.end()) {
+      return s;
+    }
+    if (s.turn%2 == 0) {
+      if (max < H[std::string(_k)]) {
+        max = H[std::string(_k)];
+        best = sp;
+        if (_depth == 0) {
+          _best_move = s.moves[m];
+        }
+      }
+    } else {
+      if (min > H[std::string(_k)]) {
+        min = H[std::string(_k)];
+        best = sp;
+        if (_depth == 0) {
+          _best_move = s.moves[m];
+        }
+      }
+    }
+  }
+  if (_depth == UBFM_DEPTH_LIMIT) {
+    return s;
+  }
+  _parents[++_depth] = best;
+  return selection(best);
 }
 
 
-bt_t selection(bt_t sp) {
-	int i;
-	bt_t spp;
-	bt_t best;
-	std::string hash;
-	double min = std::numeric_limits<double>::infinity();
-	double max = -std::numeric_limits<double>::infinity();
-	sp.update_moves();
-	for (i = 0; i < sp.nb_moves; i++) {
-		spp = sp;
-		spp.play(sp.moves[i]);
-		hash = get_state(spp);
-		if (H.find(hash) != H.end()) return spp;
-		if (sp.turn%2 == 0) {
-			if (H[hash] > max) {
-				max = H[hash];
-				best = spp;
-			} 
-		}
-		else { 
-			if (H[hash] > min) {
-				min  = H[hash];
-				best =  spp;
-			} 
-		}
-	}
-	return selection(best);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void expansion(bt_t s, int player) {
+  s.update_moves(player);
+  for (int m = 0; m < s.nb_moves; m++) {
+    bt_t sp = s;
+    sp.play(s.moves[m]);
+    sp.get_board(_k);
+    if (H.find(std::string(_k)) == H.end()) {
+      H.insert({std::string(_k), sp.eval()});
+    }
+  }
 }
 
-void expension(bt_t sp) {
-	int i;
-	bt_t spp;
-	std::string hash;
-	sp.update_moves();
-	for (i = 0; i < sp.nb_moves; i++) {
-		spp = sp;
-		spp.play(sp.moves[i]);
-		hash = get_state(spp);
-		if (H.find(hash) != H.end()) {
-			H[hash] = eval(spp);
-		}
-	}
+void expansion(bt_t s) {
+  s.update_moves();
+  for (int m = 0; m < s.nb_moves; m++) {
+    bt_t sp = s;
+    sp.play(s.moves[m]);
+    sp.get_board(_k);
+    if (H.find(std::string(_k)) == H.end()) {
+      H.insert({std::string(_k), sp.eval()});
+    }
+  }
 }
 
-void backpropagate(bt_t sp) {
-	int i;
-	bt_t spp;
-	bt_t p;
-	std::string hash, h2;
-	h2 = get_state(sp);
-	double min = std::numeric_limits<double>::infinity();
-	double max = -std::numeric_limits<double>::infinity();
-	sp.update_moves();
-	if (sp.turn%2 == 0)
-	{
-		for (i = 0; i < sp.nb_moves; i++)
-		{
-			spp = sp;
-			spp.play(sp.moves[i]);
-			hash = get_state(spp);
-			if (max < H[hash]) {
-				max = H[hash];
-			}
-		}
-		H[h2] = max;
-	}
-	else {
-		for (i = 0; i < sp.nb_moves; i++)
-		{
-			spp = sp;
-			spp.play(sp.moves[i]);
-			hash = get_state(spp);
-			if (min > H[hash]) {
-				min = H[hash];
-			}
-		}
-		H[h2] = min;
-	}
-	if (h2 == ROOT) {
-		return;
-	}
-	p = get_parent(sp);
-	return backpropagate(p);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void backpropagate(bt_t s, int player) {
+  s.update_moves(player);
+  int min = _infini_p, max = _infini_n;
+  if (s.turn%2 == 0) {
+    for (int m = 0; m < s.nb_moves; m++) {
+      bt_t sp = s;
+      sp.play(s.moves[m]);
+      sp.get_board(_k);
+      if (max < H[std::string(_k)]) {
+        max = H[std::string(_k)];
+      }
+      s.get_board(_k);
+      H[std::string(_k)] = max;
+    }
+  } else {
+    for (int m = 0; m < s.nb_moves; m++) {
+      bt_t sp = s;
+      sp.play(s.moves[m]);
+      sp.get_board(_k);
+      if (min > H[std::string(_k)]) {
+        min = H[std::string(_k)];
+      }
+      s.get_board(_k);
+      H[std::string(_k)] = min;
+    }
+  }
+  s.get_board(_k);
+  if (!strcmp(_k, _root)) {
+    return;
+  }
+  bt_t p = _parents[--_depth];
+  p.get_board(_k);
+  return backpropagate(p, player);
 }
 
-void ubfm(bt_t s){
-	H.clear();
-	H.insert({get_state(s), 0});
-	_chrono = clock();
-	ROOT = get_state(s);
-	while (((double)(clock() - _chrono)/CLOCKS_PER_SEC) < TIME_LIMIT) {
-		bt_t s_prime = selection(s);
-		expension(s_prime);
-		backpropagate(s_prime);
-	}
-	fprintf(stderr, "Time to finished : %d", ((double)(clock() - _chrono)/CLOCKS_PER_SEC) < TIME_LIMIT);
+void backpropagate(bt_t s) {
+  s.update_moves();
+  int min = _infini_p, max = _infini_n;
+  if (s.turn%2 == 0) {
+    for (int m = 0; m < s.nb_moves; m++) {
+      bt_t sp = s;
+      sp.play(s.moves[m]);
+      sp.get_board(_k);
+      if (max < H[std::string(_k)]) {
+        max = H[std::string(_k)];
+      }
+      s.get_board(_k);
+      H[std::string(_k)] = max;
+    }
+  } else {
+    for (int m = 0; m < s.nb_moves; m++) {
+      bt_t sp = s;
+      sp.play(s.moves[m]);
+      sp.get_board(_k);
+      if (min > H[std::string(_k)]) {
+        min = H[std::string(_k)];
+      }
+      s.get_board(_k);
+      H[std::string(_k)] = min;
+    }
+  }
+  s.get_board(_k);
+  if (!strcmp(_k, _root)) {
+    return;
+  }
+  bt_t p = _parents[--_depth];
+  p.get_board(_k);
+  return backpropagate(p);
+}
+
+
+
+
+
+
+
+
+
+bt_move_t ubfm(int player) {
+  _chrono = clock();
+  _parents[0] = B;
+  _depth = 0;
+  H.clear();
+  B.get_board(_k);
+  strncpy(_root, _k, 128);
+  H.insert({std::string(_k), 0});
+  while (true) {
+    bt_t sp = selection(B, player);
+    if ((sp.endgame() != EMPTY && sp.endgame() != player) 
+    || ((double)(clock() - _chrono)/CLOCKS_PER_SEC) > TIME_LIMIT) {
+      return _best_move;
+    }
+    expansion(sp, player);
+    backpropagate(sp, player);
+  }
+}
+
+bt_move_t ubfm() {
+  _chrono = clock();
+  _player = (white_turn) ? WHITE : BLACK;
+  _parents[0] = B;
+  _depth = 0;
+  H.clear();
+  B.get_board(_k);
+  strncpy(_root, _k, 128);
+  H.insert({std::string(_k), 0});
+  while (true) {
+    bt_t sp = selection(B);
+    if ((sp.endgame() != EMPTY && sp.endgame() != _player) 
+    || ((double)(clock() - _chrono)/CLOCKS_PER_SEC) > TIME_LIMIT) {
+      return _best_move;
+    }
+    expansion(sp);
+    backpropagate(sp);
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -456,15 +572,15 @@ void genmove() {
     printf("= \n\n");
     return;
   }
-  bt_move_t m = B.get_rand_move();
+  bt_move_t m = ubfm();
   printf("= %s\n\n", m.tostr(B.nbl).c_str());
 }
 void genmove(char _turn) {  
   if(_turn == '@') {
-    bt_move_t m = B.get_rand_move(BLACK);
+    bt_move_t m = ubfm(BLACK);
     printf("= %s\n\n", m.tostr(B.nbl).c_str());
   } else {
-    bt_move_t m = B.get_rand_move(WHITE);
+    bt_move_t m = ubfm(WHITE);
     printf("= %s\n\n", m.tostr(B.nbl).c_str());
   }
 }
