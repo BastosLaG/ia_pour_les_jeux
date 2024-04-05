@@ -141,3 +141,4 @@
  (./Player2 3 23.99) (./Player4 -3 23.99) => ./Player2 win
  (./Player6 12 24.00) (./Player7 -12 23.52) => ./Player6 win
  (./Player2 3 23.99) (./Player6 -3 23.99) => ./Player2 win
+ (./bc_ids_player -12 23.47) (./bc_heuristique_player 12 24.00) => ./bc_heuristique_player win
