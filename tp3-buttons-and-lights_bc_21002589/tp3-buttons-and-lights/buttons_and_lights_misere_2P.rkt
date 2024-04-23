@@ -30,6 +30,14 @@
        )
    )
 
+(! (:- (double_next A B C T L A1 B1 C1 T1 L1)
+       (!= T 0) 
+       (next A B C T L Y U I O P)
+       (next Y U I T P A1 B1 C1 T1 L1)
+   )
+)
+
+;;; 2 Joueurs
 ;;; predicat end/4
 (! (end 0 0 0 #t))
 (! (:- (end A B C R)
@@ -40,9 +48,8 @@
        )
    )
 
-
-
 ;;; predicat eval/5
+;;; 2 joueurs
 (! (:- (eval A B C T L)
        (end A B C X)
        (= X #t)
@@ -50,16 +57,17 @@
        (= L '())))
 (! (:- (eval A B C T L)
     (!= T 0) 
-    (next A B C T '() A1 B1 C1 T1 L1)
+    (double_next A B C T '() A1 B1 C1 T1 L1)
     (eval A1 B1 C1 T1 L2)
-    (append L1 L2 :- L)))
+    (cons L1 L2 :- L)))
 
-;;; Zone de Test 3L1P
-(? (next 1 1 1 2 '() A B C X Y))
-;(? (next 0 1 1 1 '() A B C X Y))
-;(? (end 0 0 0 X))
+;;; Zone de Test 3L2P
+(? (double_next 1 1 1 1 '() A B C X Y))
+(? (next 1 1 1 1 '() A B C X Y))
+(? (next 0 1 1 1 '() A B C X Y))
+(? (end 0 0 0 X))
 (? (end 1 1 1 X))
 (? (end 1 1 0 X))
 (? (end 0 1 0 X))
-(? (eval 1 1 1 4 X))
-;(? (eval 1 1 1 7 X))
+(? (eval 1 1 0 2 X))
+(? (eval 1 1 1 2 X))

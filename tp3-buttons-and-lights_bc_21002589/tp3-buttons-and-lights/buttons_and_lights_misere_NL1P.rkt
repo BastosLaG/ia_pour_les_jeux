@@ -1,5 +1,5 @@
 #lang datalog/sexp
-(require racket/list)
+
 ;;; predicat next/10
 ;L'action 'a' inverse la première lampe (inverser = allumer ou éteindre)
 ;L'action 'b' copie la première lampe sur la 2eme lampe et éteind la première lampe 
@@ -40,7 +40,15 @@
        )
    )
 
-
+(! (start 0 '()))
+(! (:- (start N L)
+       (! N 0)
+       (- N 1 :- N1)
+       (random 0 1 :- R)  
+       (cons R L :- L)  
+       (start N1 L)  
+       (cons L1 L)
+       ))
 
 ;;; predicat eval/5
 (! (:- (eval A B C T L)
@@ -54,12 +62,15 @@
     (eval A1 B1 C1 T1 L2)
     (append L1 L2 :- L)))
 
-;;; Zone de Test 3L1P
+;;; Zone de Test NL1P
 (? (next 1 1 1 2 '() A B C X Y))
-;(? (next 0 1 1 1 '() A B C X Y))
-;(? (end 0 0 0 X))
+(? (next 0 1 1 1 '() A B C X Y))
+(? (end 0 0 0 X))
 (? (end 1 1 1 X))
 (? (end 1 1 0 X))
 (? (end 0 1 0 X))
 (? (eval 1 1 1 4 X))
-;(? (eval 1 1 1 7 X))
+(? (eval 1 1 1 7 X))
+
+(? (start 0 L))
+(? (start 1 L))
