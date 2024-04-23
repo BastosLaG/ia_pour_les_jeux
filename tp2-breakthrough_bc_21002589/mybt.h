@@ -565,54 +565,94 @@ double bt_t::score(int _color) {
 double bt_t::eval() {
 	double value = nb_white_pieces - nb_black_pieces;
 
-		for (int i = 0; i < nbc; i++) {
-			if (board[0][i] == WHITE) value += 100;
-			if (board[1][i] == WHITE) value += 50;
-			if (board[nbl - 2][i] == BLACK) value -= 50;
-			if (board[nbl - 1][i] == BLACK) value -= 100;
-		}
-		for (int i = 0; i < nbl - 1; i++) { 
-			for (int j = 0; j < nbc; j++) {
-				if (board[i][j] == BLACK) {
-					if (j != 0 && board[i + 1][j - 1] == WHITE) {
-						if (j == 1) { 
-							if (board[i + 2][j] != WHITE && board[i + 2][j] != UNSEEN)
-								value -= 0.5;
-						} 
-						else if ((board[i + 2][j - 2] != WHITE && board[i + 2][j - 2] != UNSEEN) && (board[i + 2][j] != WHITE && board[i + 2][j] != UNSEEN)) {
-							value -= 0.5;
-						}
-					}
-					if (j != nbc - 1 && board[i + 1][j + 1] == WHITE) {
-						if (j == nbc - 2) { 
-							if (board[i + 2][j] != WHITE && board[i + 2][j] != UNSEEN)
-								value -= 0.5;
-						} 
-						else if ((board[i + 2][j + 2] != WHITE && board[i + 2][j + 2] != UNSEEN) && (board[i + 2][j] != WHITE && board[i + 2][j] != UNSEEN)) {
-							value -= 0.5; 
-						}
-					}
-				}
-				if (board[i + 2][j] == WHITE) {
-					if (j != 0 && board[i + 2 - 1][j - 1] == BLACK) {
-						if (j == 1) { 
-							if (board[i + 2 - 2][j] != BLACK && board[i + 2 - 2][j] != UNSEEN) value += 0.5;
-						} 
-						else if ((board[i + 2 - 2][j - 2] != BLACK && board[i + 2 - 2][j - 2] != UNSEEN) && (board[i + 2 - 2][j] != BLACK && board[i + 2 - 2][j] != UNSEEN)) {
-							value += 0.5;
-						}
-					}
-					if (j != nbc - 1 && board[i + 2 - 1][j + 1] == BLACK) {
-						if (j == nbc - 2) { 
-							if (board[i + 2 - 2][j] != BLACK && board[i + 2 - 2][j] != UNSEEN) value += 0.5;
-						} 
-						else if ((board[i + 2 - 2][j + 2] != BLACK && board[i + 2 - 2][j + 2] != UNSEEN) && (board[i + 2 - 2][j] != BLACK && board[i + 2 - 2][j] != UNSEEN)) {
-							value += 0.5;
-						}
-					}
-				}
+	if (turn%2 == WHITE) 
+	{
+		for (int col = 1; col < nbc; col++)
+		{
+			for (int row = 1; row <= nbl; row++)
+			{
+        if (board[row][col] == turn%2)
+        {
+          // les blancs doivent atteindre 0 
+
+          // zone support
+          if (board[row+1][col]   == turn%2) 	value += (nbl-row)*0.1;				
+          if (board[row+1][col+1] == turn%2) 	value += (nbl-row)*0.1;	
+          if (board[row+1][col-1] == turn%2) 	value += (nbl-row)*0.1;	
+          if (board[row+1][col]   == turn%2)  value += (nbl-row)*0.1;	
+          if (board[row-1][col]   == turn%2) 	value += (nbl-row)*0.1;				
+          if (board[row-1][col+1] == turn%2) 	value += (nbl-row)*0.1;	
+          if (board[row-1][col-1] == turn%2) 	value += (nbl-row)*0.1;	
+          if (board[row-1][col]   == turn%2) 	value += (nbl-row)*0.1;
+          
+          // zone safe
+          if (board[row-1][col+1] == (turn+1)%2) 	value -= (row)*0.5;	
+          if (board[row-1][col-1] == (turn+1)%2) 	value -= (row)*0.5;	
+
+          // Zone neutre
+          if (board[row+1][col]   == EMPTY)   value += 0.1;        
+          if (board[row+1][col+1] == EMPTY)   value += 0.1;  
+          if (board[row+1][col-1] == EMPTY)   value += 0.1;  
+          if (board[row+1][col]   == EMPTY)   value += 0.1;  
+          if (board[row-1][col]   == EMPTY)   value += 0.1;        
+          if (board[row-1][col+1] == EMPTY)   value += 0.1;  
+          if (board[row-1][col-1] == EMPTY)   value += 0.1;  
+          if (board[row-1][col]   == EMPTY)   value += 0.1;
+
+          if (row+1 == nbl-1) value += 10.0;
+          if (row+1 == nbl)   value += 20.0;
+        }
+        else if (board[row][col] == (turn+1)%2) { 
+          if (row == 1) value -= 100;
+         }
 			}
 		}
+	}
+	else{
+		for (int col = 1; col < nbc; col++)
+		{
+			for (int row = 1; row < nbl; row++)
+			{
+        if (board[row][col] == turn%2)
+        {
+          // les noires doivent atteindre nbl
+
+          // zone support
+          if (board[row+1][col]   == turn%2) 	value += row*0.1;				
+          if (board[row+1][col+1] == turn%2) 	value += row*0.1;	
+          if (board[row+1][col-1] == turn%2) 	value += row*0.1;	
+          if (board[row+1][col]   == turn%2)  value += row*0.1;	
+          if (board[row-1][col]   == turn%2) 	value += row*0.1;				
+          if (board[row-1][col+1] == turn%2) 	value += row*0.1;	
+          if (board[row-1][col-1] == turn%2) 	value += row*0.1;	
+          if (board[row-1][col]   == turn%2) 	value += row*0.1;
+          
+          // zone safe
+          if (board[row+1][col+1] == (turn+1)%2) 	value -= (nbl - row)*0.5;	
+          if (board[row+1][col-1] == (turn+1)%2) 	value -= (nbl - row)*0.5;	
+
+          // Zone neutre
+          if (board[row+1][col]   == EMPTY)   value += 0.1;        
+          if (board[row+1][col+1] == EMPTY)   value += 0.1;  
+          if (board[row+1][col-1] == EMPTY)   value += 0.1;  
+          if (board[row+1][col]   == EMPTY)   value += 0.1;  
+          if (board[row-1][col]   == EMPTY)   value += 0.1;        
+          if (board[row-1][col+1] == EMPTY)   value += 0.1;  
+          if (board[row-1][col-1] == EMPTY)   value += 0.1;  
+          if (board[row-1][col]   == EMPTY)   value += 0.1;
+
+          if (row+1 == 1) value += 10.0;
+          if (row+1 == 0)   value += 20.0;
+        }
+        else if (board[row][col] == (turn+1)%2) { 
+          if (row == nbl-1) value -= 100;
+        }
+        
+			}
+		}
+	}
+	
+	
 	return value;
 }
 #endif /* MYBT_H */

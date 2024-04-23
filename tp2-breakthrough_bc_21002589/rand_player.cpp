@@ -16,7 +16,7 @@ bool verbose = false;
 bool showboard_at_each_move = false;
 #endif
 
-char playername[128];
+char playername[128] = "débilus.exe";
 
 void help() {
   fprintf(stderr, "  mode cla | mis (classic OR misere)\n"); 

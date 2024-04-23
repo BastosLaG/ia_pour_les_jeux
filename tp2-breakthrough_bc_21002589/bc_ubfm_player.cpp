@@ -29,14 +29,13 @@ int _infini_n = std::numeric_limits<int>::min();
 double _chrono = clock();
 bool _debug = false;
 
-char playername[128];
+char playername[128] = "xXx_Yилфрид_неудачник_xахаха_xXx";
 
 #ifndef VERBOSE_PLAYER
 #define VERBOSE_PLAYER
 bool verbose = true;
 bool showboard_at_each_move = false;
 #endif
-
 
 // Fonctions cours
 void help();
@@ -201,37 +200,6 @@ bt_t selection(bt_t s) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void expansion(bt_t s, int player) {
   s.update_moves(player);
   for (int m = 0; m < s.nb_moves; m++) {
@@ -255,41 +223,6 @@ void expansion(bt_t s) {
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
